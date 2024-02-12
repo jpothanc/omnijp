@@ -11,6 +11,7 @@ class HttpCachedRequest(HttpRequest):
 
     def request_get(self, url, cache_name):
         result = super().request_get(url)
-        return result.status_code == 200 \
-            if self.cache.save(result.content, cache_name) \
-            else self.cache.load(cache_name)
+        if result.status_code == 200:
+            self.cache.save(result.content, cache_name)
+            return result.content
+        return self.cache.load(cache_name)
