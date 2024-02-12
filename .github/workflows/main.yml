@@ -1,0 +1,40 @@
+name: Build and Publish
+
+on:
+  push:
+    branches:
+      - main  # Change this to your main branch name
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install setuptools wheel twine bump2version
+
+    - name: Bump version
+      run: | 
+        new_version=$(bump2version minor --dry-run --list | grep new_version | cut -d'=' -f2)
+        bump2version minor --new-version $new_version
+
+    - name: Build package
+      run: python setup.py sdist bdist_wheel
+
+    - name: Publish to PyPI
+      if: github.event_name == 'push' && github.event.ref == 'refs/heads/main'  # Change this to your main branch name
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      run: |
+        twine upload dist/*
