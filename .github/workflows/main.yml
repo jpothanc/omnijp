@@ -24,7 +24,9 @@ jobs:
         pip install setuptools wheel twine bump2version
 
     - name: Bump version
-      run: bump2version minor  # You can use 'minor' or 'major' instead of 'patch'
+      run: | 
+        new_version=$(bump2version minor --dry-run --list | grep new_version | cut -d'=' -f2)
+        bump2version minor --new-version $new_version
 
     - name: Build package
       run: python setup.py sdist bdist_wheel
