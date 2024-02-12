@@ -1,5 +1,3 @@
-import tempfile
-
 from restq.http_request import HttpRequest
 from restq.disk_cache import DiskCache
 
