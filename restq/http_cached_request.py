@@ -3,9 +3,16 @@ from restq.disk_cache import DiskCache
 
 
 class HttpCachedRequest(HttpRequest):
-    def __init__(self, url, headers, cache_dir):
-        super().__init__(url, headers)
+    def __init__(self):
+        self.cache = None
+        super().__init__()
+
+    def set_cache(self, cache_dir):
         self.cache = DiskCache(cache_dir)
+        return self
+
+    def build(self):
+        return self
 
     def request_get(self, url, cache_name):
         result = super().request_get(url)
