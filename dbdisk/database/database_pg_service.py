@@ -1,16 +1,20 @@
 import psycopg2
 
+from dbdisk.database.database_service import DatabaseService
 
-class DatabasePostgresService:
-    @staticmethod
-    def execute_query(connection_string, query):
+
+class DatabasePgService(DatabaseService):
+    def __init__(self, connection_string):
+        super().__init__(connection_string)
+
+    def execute(self, query):
         try:
-            connection = psycopg2.connect(connection_string)
+            connection = psycopg2.connect(self.connection_string)
             cursor = connection.cursor()
             cursor.execute(query)
 
         except psycopg2.Error as e:
-            print("Error connecting to PostgreSQL:", e)
+            print("Error connecting to PostgresSQL:", e)
 
         finally:
             header = [desc[0] for desc in cursor.description]

@@ -1,0 +1,20 @@
+Install twine
+pip install twine
+
+Build the distribution package
+python setup.py sdist
+python setup.py bdist_wheel
+
+Upload to PyPI using twine
+twine upload dist/*
+
+# You will be asked for username and password
+# Pls provide the token name and token which you have created.
+Uploading distributions to https://upload.pypi.org/legacy/
+Enter your username: __token__
+Enter your password:
+Uploading example_library-0.1-py3-none-any.whl
+100% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.3/4.3 kB • 00:00 • ?
+
+
+https://medium.com/@kaljessy/building-and-sharing-a-guide-to-creating-and-uploading-python-libraries-56998a001a2c
