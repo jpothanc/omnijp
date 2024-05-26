@@ -1,5 +1,5 @@
-from dbdisk.caches.db_disk_cache_csv import DbDiskCacheCsv
-from dbdisk.types import DiskFileType
+from src.dbdisk.caches.db_disk_cache_csv import DbDiskCacheCsv
+from src.dbdisk.types import DiskFileType
 
 
 class DbDiskFactory:

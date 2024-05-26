@@ -1,7 +1,7 @@
 import os
 import csv
-from dbdisk.caches.db_disk_cache import DbDiskCache
-from dbdisk.helper import split_into_subsets, zip_directory
+from src.dbdisk.caches.db_disk_cache import DbDiskCache
+from src.common.helper import split_into_subsets, zip_directory
 
 
 class DbDiskCacheCsv(DbDiskCache):

@@ -18,6 +18,6 @@ def zip_directory(directory, zip_name, delete_after_zip=True):
     """
     Zip the directory.
     """
-    archived = shutil.make_archive(zip_name, 'zip', directory)
+    shutil.make_archive(zip_name, 'zip', directory)
     if delete_after_zip:
         shutil.rmtree(directory)

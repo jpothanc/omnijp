@@ -1,6 +1,6 @@
 import unittest
-from restq.http_cached_request import HttpCachedRequest
-from restq.http_request import HttpRequest
+from src.restq.http_cached_request import HttpCachedRequest
+from src.restq.http_request import HttpRequest
 
 
 class TestHttpRequest(unittest.TestCase):

@@ -21,14 +21,14 @@ pip install omnijp
 Here's an example of how to use the `DbDiskCache` class to cache database results:
 
 ```python
-from dbdisk.db_disk_cache_builder import DbDiskCacheBuilder
-from dbdisk.types import DbType, DiskFileType
+from src.dbdisk.db_disk_cache_builder import DbDiskCacheBuilder
+from src.dbdisk.types import DbType, DiskFileType
 
 CONNECTION_STRING = "your_connection_string"
 
 result = DbDiskCacheBuilder.create(lambda x: (
     x.set_db_type(DbType.POSTGRESQL)
-    # currenty only csv is supported
+    # currently only csv is supported
     .set_disk_file_type(DiskFileType.CSV)
     .set_cache_path(r"C:\temp\diskCache")
     .set_cache_name("users")

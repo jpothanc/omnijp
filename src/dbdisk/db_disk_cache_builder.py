@@ -1,5 +1,5 @@
-from dbdisk.db_disk_request import DbDiskRequest
-from dbdisk.types import DbType, DiskFileType
+from src.dbdisk.db_disk_request import DbDiskRequest
+from src.dbdisk.types import DbType, DiskFileType
 
 MAX_ROWS = 1000000
 class DbDiskCacheBuilder:

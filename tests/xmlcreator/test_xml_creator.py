@@ -1,7 +1,7 @@
 import os.path
 import unittest
 
-from xmlcreator.xml_creator import XmlCreator
+from src.xmlcreator.xml_creator import XmlCreator
 
 
 class TestXmlCreator(unittest.TestCase):

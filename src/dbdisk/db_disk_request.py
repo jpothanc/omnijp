@@ -1,7 +1,6 @@
-from dbdisk.database.database_pg_service import DatabasePgService
-from dbdisk.database.database_service import DatabaseService
-from dbdisk.db_disk_factory import DbDiskFactory
-from dbdisk.types import DiskFileType
+from src.dbdisk.database.database_pg_service import DatabasePgService
+from src.dbdisk.database.database_service import DatabaseService
+from src.dbdisk.db_disk_factory import DbDiskFactory
 
 
 class DbDiskRequest:

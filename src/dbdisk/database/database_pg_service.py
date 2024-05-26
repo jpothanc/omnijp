@@ -1,6 +1,6 @@
 import psycopg2
 
-from dbdisk.database.database_service import DatabaseService
+from src.dbdisk.database.database_service import DatabaseService
 
 
 class DatabasePgService(DatabaseService):

@@ -1,7 +1,7 @@
 import unittest
 
-from dbdisk.db_disk_cache_builder import DbDiskCacheBuilder
-from dbdisk.types import DbType, DiskFileType
+from src.dbdisk.db_disk_cache_builder import DbDiskCacheBuilder
+from src.dbdisk.types import DbType, DiskFileType
 
 CONNECTION_STRING = 'postgresql://jpothanc:Z2UXaMsCO3HV@ep-white-forest-89963536.ap-southeast-1.aws.neon.tech/datastore'
 class TestDbDiskRequest(unittest.TestCase):

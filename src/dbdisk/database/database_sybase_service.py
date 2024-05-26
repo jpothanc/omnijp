@@ -1,6 +1,6 @@
 import pymssql
 
-from dbdisk.database.database_service import DatabaseService
+from src.dbdisk.database.database_service import DatabaseService
 
 
 class DatabaseSybaseService(DatabaseService):

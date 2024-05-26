@@ -1,5 +1,5 @@
-from restq.http_request import HttpRequest
-from restq.disk_cache import DiskCache
+from src.restq.http_request import HttpRequest
+from src.restq.disk_cache import DiskCache
 
 
 class HttpCachedRequest(HttpRequest):
