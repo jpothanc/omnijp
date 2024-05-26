@@ -1,7 +1,7 @@
 import unittest
 
 from dbdisk.db_disk_cache_builder import DbDiskCacheBuilder
-from dbdisk.types import DbType
+from dbdisk.types import DbType, DiskFileType
 
 CONNECTION_STRING = 'postgresql://jpothanc:Z2UXaMsCO3HV@ep-white-forest-89963536.ap-southeast-1.aws.neon.tech/datastore'
 class TestDbDiskRequest(unittest.TestCase):
@@ -12,6 +12,7 @@ class TestDbDiskRequest(unittest.TestCase):
     def test_db_disk_request(self):
         result = DbDiskCacheBuilder.create(lambda x: (
             x.set_db_type(DbType.POSTGRESQL)
+            .set_disk_file_type(DiskFileType.CSV)
             .set_cache_path(r"C:\temp\diskCache")
             .set_cache_name("users_simple_cache")
             .set_connection_string(CONNECTION_STRING)

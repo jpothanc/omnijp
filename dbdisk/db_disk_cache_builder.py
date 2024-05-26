@@ -45,7 +45,6 @@ class DbDiskCacheBuilder:
         self.rows_per_file = rows_per_file
         return self
 
-
     def execute(self, query):
         print(f"Executing query: {query}")
         print(f"Using cache path: {self.cache_path}")
