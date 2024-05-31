@@ -49,6 +49,44 @@ http_cached_request = HttpCachedRequest().set_base_url('https://jsonplaceholder.
 response = http_cached_request.request_get('posts?_limit=10', 'posts')
 ```
 
+And here's an example of how to use the `OpenAIBot` 
+To use the OpenAIBot class, you need to provide a valid OpenAI API key when creating an instance of the class. This key is used to authenticate your requests to the OpenAI API.  
+Here's a basic example of how to use the OpenAIBot class:
+```python
+import os
+from src.openaibot.openai_bot import OpenAIBot
+def my_callback(response):
+    print("Received response:", response)
+
+def run_bot():
+    import asyncio
+    openai_key = os.getenv("OPENAI_API_KEY")
+    if openai_key is None:
+        print("Please set OPENAI_API_KEY environment variable")
+        exit(1)
+
+    openai_bot = OpenAIBot(openai_key)
+    while True:
+        user_input = input("Enter your question:")
+        if user_input == "exit":
+            break
+        asyncio.run(openai_bot.get_response(user_input, my_callback))
+
+
+if __name__ == "__main__":
+    try:
+        run_bot()
+    except Exception as e:
+        print(e)
+```
+In this example, my_callback is a function that will be called with the response from the OpenAI API.
+Error Handling
+The OpenAIBot class also handles some exceptions that might occur during the interaction with the OpenAI API:  
+openai.RateLimitError: This exception is raised when the rate limit of the API is exceeded. The method raises a new exception with a custom message in this case.  
+openai.AuthenticationError: This exception is raised when the authentication with the API fails (for example, if the API key is incorrect). The method raises a new exception with a custom message in this case.  
+openai.OpenAIError: This is a general exception for other errors that might occur during the interaction with the API. The method raises a new exception with a custom message in this case.  
+You can catch these exceptions in your code and handle them as needed.
+
 ## Testing
 
 The library includes unit tests that you can run to verify its functionality. You can run the tests using the following command:
