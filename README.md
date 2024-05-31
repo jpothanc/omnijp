@@ -17,6 +17,7 @@ pip install omnijp
 ```
 
 ## Usage
+### DbDiskCache
 
 Here's an example of how to use the `DbDiskCache` class to cache database results:
 
@@ -37,7 +38,7 @@ result = DbDiskCacheBuilder.create(lambda x: (
     .set_can_zip(True)
 )).execute("select * from Users where retired != 1")
 ```
-
+### HttpCachedRequest
 And here's an example of how to use the `HttpCachedRequest` class to make a GET request and cache the result:
 
 ```python
@@ -48,7 +49,7 @@ http_cached_request = HttpCachedRequest().set_base_url('https://jsonplaceholder.
 
 response = http_cached_request.request_get('posts?_limit=10', 'posts')
 ```
-
+### OpenAIBot
 And here's an example of how to use the `OpenAIBot` 
 To use the OpenAIBot class, you need to provide a valid OpenAI API key when creating an instance of the class. This key is used to authenticate your requests to the OpenAI API.  
 Here's a basic example of how to use the OpenAIBot class:
