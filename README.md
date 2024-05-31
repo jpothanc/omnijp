@@ -81,11 +81,11 @@ if __name__ == "__main__":
         print(e)
 ```
 In this example, my_callback is a function that will be called with the response from the OpenAI API.
-Error Handling
+#### Error Handling
 The OpenAIBot class also handles some exceptions that might occur during the interaction with the OpenAI API:  
-openai.RateLimitError: This exception is raised when the rate limit of the API is exceeded. The method raises a new exception with a custom message in this case.  
-openai.AuthenticationError: This exception is raised when the authentication with the API fails (for example, if the API key is incorrect). The method raises a new exception with a custom message in this case.  
-openai.OpenAIError: This is a general exception for other errors that might occur during the interaction with the API. The method raises a new exception with a custom message in this case.  
+**openai.RateLimitError**: This exception is raised when the rate limit of the API is exceeded. The method raises a new exception with a custom message in this case.  
+**openai.AuthenticationError**: This exception is raised when the authentication with the API fails (for example, if the API key is incorrect). The method raises a new exception with a custom message in this case.  
+**openai.OpenAIError**: This is a general exception for other errors that might occur during the interaction with the API. The method raises a new exception with a custom message in this case.  
 You can catch these exceptions in your code and handle them as needed.
 
 ## Testing
