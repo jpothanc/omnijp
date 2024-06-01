@@ -31,10 +31,10 @@ class DatabaseService:
     def connect(self):
         pass
 
-    @abstractmethod
-    def handle_error(self, error):
+    @staticmethod
+    def handle_error(error):
         error_messages = {
-            psycopg2.Error: "Error connecting to PostgreSQL:",
+            psycopg2.Error: "Error connecting to PostgresSQL:",
             pymssql.Error: "Error connecting to Sybase:"
         }
         error_type = type(error)

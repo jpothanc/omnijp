@@ -18,5 +18,3 @@ class AsyncOpenAIBot(OpenAIBotBase):
         except Exception as e:
             self.handle_error(e)
 
-    def handle_error(self, error):
-        super().handle_error(error)

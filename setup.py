@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='omnijp',
-    version='2.6.0',
+    version='2.7.0',
     packages=find_packages(),
     install_requires=[
         'retry>=0.9.2',
@@ -28,11 +28,6 @@ setup(
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
-    ],
+        'Programming Language :: Python :: 3.8',],
     python_requires='>=3.8',
 )

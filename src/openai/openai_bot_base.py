@@ -17,7 +17,7 @@ class OpenAIBotBase:
                 {"role": "system",
                  "content": "You are a helpful assistant that provides concise and accurate information."}]
 
-    @abstractmethod
+    @staticmethod
     def handle_error(self, error):
         error_messages = {
             openai.RateLimitError: "Rate limit exceeded. Please try again later.",

@@ -9,5 +9,3 @@ class DatabaseSybaseService(DatabaseService):
         import pymssql
         return pymssql.connect(self.connection_string)
 
-    def handle_error(self, error):
-        super().handle_error(error)

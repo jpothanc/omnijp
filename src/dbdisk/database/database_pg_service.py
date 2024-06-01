@@ -9,5 +9,3 @@ class DatabasePgService(DatabaseService):
         import psycopg2
         return psycopg2.connect(self.connection_string)
 
-    def handle_error(self, error):
-        super().handle_error(error)

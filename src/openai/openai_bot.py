@@ -17,5 +17,4 @@ class OpenAIBot(OpenAIBotBase):
             self.handle_error(e)
             return None
 
-    def handle_error(self, error):
-        super().handle_error(error)
+
