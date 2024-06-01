@@ -17,4 +17,5 @@ class DbDiskRequest:
         db_pg_service = DatabasePgService(self.connection_string)
         header, data = db_pg_service.execute(query)
         print(data)
-        return DbDiskFactory.create_db_disk(self.disk_file_type, self.cache_dir, self.cache_name, self.can_zip, self.rows_per_file).save(header, data)
+        return DbDiskFactory.create_db_disk(self.disk_file_type, self.cache_dir, self.cache_name, self.can_zip,
+                                            self.rows_per_file).save(header, data)

@@ -55,11 +55,15 @@ To use the AsyncOpenAIBot class, you need to provide a valid OpenAI API key when
 This key is used to authenticate your requests to the OpenAI API.  
 
 Here's a basic example of how to use the AsyncOpenAIBot class:
+
 ```python
 import os
-from src.openaibot.openai_bot import OpenAIBot
+from src.openai.openai_bot import OpenAIBot
+
+
 def my_callback(response):
     print("Received response:", response)
+
 
 def run_bot_async():
     import asyncio

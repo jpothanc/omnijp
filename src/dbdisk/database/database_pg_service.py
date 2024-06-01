@@ -1,4 +1,6 @@
 from src.dbdisk.database.database_service import DatabaseService
+
+
 class DatabasePgService(DatabaseService):
     def __init__(self, connection_string):
         super().__init__(connection_string)

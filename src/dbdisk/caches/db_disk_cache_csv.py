@@ -19,14 +19,16 @@ class DbDiskCacheCsv(DbDiskCache):
                 total += len(subset)
             print(f"Total records saved: {total}")
             if self.can_zip:
-                zip_directory(local_cache_dir,local_cache_dir)
+                zip_directory(local_cache_dir, local_cache_dir)
         except Exception as e:
             print(f"Error saving cache: {e}")
             return False
         print(f"Cache saved to {file_path}")
         return True
+
     def get_local_cache_path(self):
         return os.path.join(self.cache_dir, self.cache_name) if self.can_zip else self.cache_dir
+
     @staticmethod
     def save_file(header, data, file_path):
         try:
@@ -40,6 +42,3 @@ class DbDiskCacheCsv(DbDiskCache):
             return False
         print(f"Cache saved to {file_path}")
         return True
-
-
-

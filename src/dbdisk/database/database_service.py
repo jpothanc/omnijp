@@ -7,7 +7,7 @@ import pymssql
 class DatabaseService:
 
     def __init__(self, connection_string):
-       self.connection_string = connection_string
+        self.connection_string = connection_string
 
     def execute(self, query):
         try:
@@ -34,8 +34,8 @@ class DatabaseService:
     @abstractmethod
     def handle_error(self, error):
         error_messages = {
-             psycopg2.Error: "Error connecting to PostgreSQL:",
-             pymssql.Error : "Error connecting to Sybase:"
+            psycopg2.Error: "Error connecting to PostgreSQL:",
+            pymssql.Error: "Error connecting to Sybase:"
         }
         error_type = type(error)
         message = error_messages.get(error_type, "Unknown error")

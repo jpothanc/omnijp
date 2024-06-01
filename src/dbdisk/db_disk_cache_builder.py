@@ -2,6 +2,8 @@ from src.dbdisk.db_disk_request import DbDiskRequest
 from src.dbdisk.types import DbType, DiskFileType
 
 MAX_ROWS = 1000000
+
+
 class DbDiskCacheBuilder:
     def __init__(self):
         self.db_type = DbType.NONE
@@ -12,7 +14,6 @@ class DbDiskCacheBuilder:
         self.can_zip = False
         self.rows_per_file = MAX_ROWS
 
-
     @classmethod
     def create(cls, setup):
         builder = cls()
@@ -22,9 +23,11 @@ class DbDiskCacheBuilder:
     def set_db_type(self, db_type: DbType):
         self.db_type = db_type
         return self
+
     def set_disk_file_type(self, disk_file_type: DiskFileType):
         self.disk_file_type = disk_file_type
         return self
+
     def set_cache_path(self, path):
         self.cache_path = path
         return self
@@ -51,6 +54,6 @@ class DbDiskCacheBuilder:
         print(f"Cache name: {self.cache_name}")
         print(f"Connection string: {self.connection_string}")
         print(f"Database type: {self.db_type}")
-        return DbDiskRequest(self.connection_string, self.cache_path, self.cache_name,self.disk_file_type, self.can_zip, self.rows_per_file).execute(query)
+        return DbDiskRequest(self.connection_string, self.cache_path, self.cache_name, self.disk_file_type,
+                             self.can_zip, self.rows_per_file).execute(query)
         # Add actual database execution logic here
-

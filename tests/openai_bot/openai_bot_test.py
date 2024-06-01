@@ -1,7 +1,7 @@
 import os
 
-from src.openaibot.async_openai_bot import AsyncOpenAIBot
-from src.openaibot.openai_bot import OpenAIBot
+from src.openai.async_openai_bot import AsyncOpenAIBot
+from src.openai.openai_bot import OpenAIBot
 
 
 # https://medium.com/@kaljessy/chating-with-openai-using-python-3ae5a14b4501
@@ -24,6 +24,7 @@ def run_bot_async():
             break
         asyncio.run(openai_bot.get_response_async(user_input, my_callback))
 
+
 def run_bot():
     openai_key = os.getenv("OPENAI_API_KEY")
     if openai_key is None:
@@ -34,19 +35,10 @@ def run_bot():
     response = openai_bot.get_response("1+1?")
     print("OpenAI Response:", response)
 
+
 if __name__ == "__main__":
     try:
         run_bot_async()
-        #run_bot()
+        # run_bot()
     except Exception as e:
         print(e)
-
-
-
-
-
-
-
-
-
-
