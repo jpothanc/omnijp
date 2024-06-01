@@ -49,38 +49,62 @@ http_cached_request = HttpCachedRequest().set_base_url('https://jsonplaceholder.
 
 response = http_cached_request.request_get('posts?_limit=10', 'posts')
 ```
-### OpenAIBot
-And here's an example of how to use the `OpenAIBot` 
-To use the OpenAIBot class, you need to provide a valid OpenAI API key when creating an instance of the class. This key is used to authenticate your requests to the OpenAI API.  
-Here's a basic example of how to use the OpenAIBot class:
+### AsyncOpenAIBot
+And here's an example of how to use the `AsyncOpenAIBot` 
+To use the AsyncOpenAIBot class, you need to provide a valid OpenAI API key when creating an instance of the class. 
+This key is used to authenticate your requests to the OpenAI API.  
+
+Here's a basic example of how to use the AsyncOpenAIBot class:
 ```python
 import os
 from src.openaibot.openai_bot import OpenAIBot
 def my_callback(response):
     print("Received response:", response)
 
-def run_bot():
+def run_bot_async():
     import asyncio
     openai_key = os.getenv("OPENAI_API_KEY")
     if openai_key is None:
         print("Please set OPENAI_API_KEY environment variable")
         exit(1)
 
-    openai_bot = OpenAIBot(openai_key)
+    openai_bot = AsyncOpenAIBot(openai_key)
     while True:
-        user_input = input("Enter your question:")
+        user_input = input("Enter your question:").lower()
         if user_input == "exit":
             break
-        asyncio.run(openai_bot.get_response(user_input, my_callback))
+        asyncio.run(openai_bot.get_response_async(user_input, my_callback))
 
 
+if __name__ == "__main__":
+    try:
+        run_bot_async()
+    except Exception as e:
+        print(e)
+```
+In this example, my_callback is a function that will be called with the response from the OpenAI API.
+
+### OpenAIBot
+Synchronous version of the OpenAIBot class
+```python
+def run_bot():
+    openai_key = os.getenv("OPENAI_API_KEY")
+    if openai_key is None:
+        print("Please set OPENAI_API_KEY environment variable")
+        exit(1)
+
+    openai_bot = OpenAIBot(openai_key)
+    response = openai_bot.get_response("1+1?")
+    print("OpenAI Response:", response)
+```
+```python
 if __name__ == "__main__":
     try:
         run_bot()
     except Exception as e:
         print(e)
 ```
-In this example, my_callback is a function that will be called with the response from the OpenAI API.
+
 #### Error Handling
 The OpenAIBot class also handles some exceptions that might occur during the interaction with the OpenAI API:  
 **openai.RateLimitError**: This exception is raised when the rate limit of the API is exceeded. The method raises a new exception with a custom message in this case.  
