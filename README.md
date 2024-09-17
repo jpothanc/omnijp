@@ -28,6 +28,7 @@ from src.dbdisk.types import DbType, DiskFileType
 CONNECTION_STRING = "your_connection_string"
 
 result = DbDiskCacheBuilder.create(lambda x: (
+    # supported db types are POSTGRESQL, SYBASE and ORACLE
     x.set_db_type(DbType.POSTGRESQL)
     # currently only csv is supported
     .set_disk_file_type(DiskFileType.CSV)

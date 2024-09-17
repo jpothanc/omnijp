@@ -1,7 +1,7 @@
-from src.dbdisk.database.database_service import DatabaseService
+from src.dbdisk.database.db_service import DbService
 
 
-class DatabaseSybaseService(DatabaseService):
+class DbSybaseService(DbService):
     def __init__(self, connection_string):
         super().__init__(connection_string)
 

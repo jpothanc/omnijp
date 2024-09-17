@@ -11,6 +11,7 @@ class DbDiskCacheBuilder:
         self.cache_path = None
         self.cache_name = None
         self.connection_string = None
+        self.db_type = None
         self.can_zip = False
         self.rows_per_file = MAX_ROWS
 
@@ -54,6 +55,6 @@ class DbDiskCacheBuilder:
         print(f"Cache name: {self.cache_name}")
         print(f"Connection string: {self.connection_string}")
         print(f"Database type: {self.db_type}")
-        return DbDiskRequest(self.connection_string, self.cache_path, self.cache_name, self.disk_file_type,
+        return DbDiskRequest(self.connection_string, self.db_type, self.cache_path, self.cache_name, self.disk_file_type,
                              self.can_zip, self.rows_per_file).execute(query)
         # Add actual database execution logic here

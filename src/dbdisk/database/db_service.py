@@ -4,7 +4,7 @@ import psycopg2
 import pymssql
 
 
-class DatabaseService:
+class DbService:
 
     def __init__(self, connection_string):
         self.connection_string = connection_string

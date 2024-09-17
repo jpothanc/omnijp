@@ -18,3 +18,12 @@ Uploading example_library-0.1-py3-none-any.whl
 
 
 https://medium.com/@kaljessy/building-and-sharing-a-guide-to-creating-and-uploading-python-libraries-56998a001a2c
+
+pip list
+pip show example-library
+pip uninstall example-library
+pip install example-library==0.1
+pip install example-library==0.1 --upgrade
+pip install example-library==0.1 --force-reinstall
+
+
