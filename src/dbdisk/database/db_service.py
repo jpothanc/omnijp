@@ -10,12 +10,19 @@ class DbService:
         self.connection_string = connection_string
 
     def execute(self, query):
+        connection = None
+        cursor = None
         try:
+            print("Executing query: ", query)
+            print("Connecting to database...")
             connection = self.connect()
+            print("Connected to database")
             cursor = connection.cursor()
+            print("Executing query...")
             cursor.execute(query)
             header = [desc[0] for desc in cursor.description]
             result = cursor.fetchall()
+            print("Query executed")
         except Exception as e:
             self.handle_error(e)
             result = None

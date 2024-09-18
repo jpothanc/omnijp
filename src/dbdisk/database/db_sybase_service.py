@@ -6,6 +6,6 @@ class DbSybaseService(DbService):
         super().__init__(connection_string)
 
     def connect(self):
-        import pymssql
-        return pymssql.connect(self.connection_string)
+        import pyodbc
+        return pyodbc.connect(self.connection_string)
 
