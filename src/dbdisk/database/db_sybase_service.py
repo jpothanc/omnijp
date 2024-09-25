@@ -9,3 +9,6 @@ class DbSybaseService(DbService):
         import pyodbc
         return pyodbc.connect(self.connection_string)
 
+    def get_all_tables_query(self):
+        return "SELECT name FROM sysobjects WHERE type='U' ORDER BY name"
+

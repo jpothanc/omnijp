@@ -1,60 +1,60 @@
-from src.dbdisk.db_disk_request import DbDiskRequest
+from src.dbdisk.models.db_disk_request import DbDiskRequest
+from src.dbdisk.db_request_executer import DbDiskRequestExecutor
 from src.dbdisk.types import DbType, DiskFileType
 
-MAX_ROWS = 1000000
+
 
 
 class DbDiskCacheBuilder:
     def __init__(self):
-        self.db_type = DbType.NONE
-        self.disk_file_type = DiskFileType.CSV
-        self.cache_path = None
-        self.cache_name = None
-        self.connection_string = None
-        self.db_type = None
-        self.can_zip = False
-        self.rows_per_file = MAX_ROWS
+        self.db_disk_request = DbDiskRequest()
+        print("DbDiskCacheBuilder created")
 
     @classmethod
     def create(cls, setup):
         builder = cls()
+        print("create")
         setup(builder)
         return builder
 
     def set_db_type(self, db_type: DbType):
-        self.db_type = db_type
+        self.db_disk_request.db_type = db_type
         return self
 
     def set_disk_file_type(self, disk_file_type: DiskFileType):
-        self.disk_file_type = disk_file_type
+        self.db_disk_request.disk_file_type = disk_file_type
         return self
 
     def set_cache_path(self, path):
-        self.cache_path = path
+        self.db_disk_request.cache_path = path
         return self
 
     def set_cache_name(self, name):
-        self.cache_name = name
+        self.db_disk_request.cache_name = name
         return self
 
     def set_connection_string(self, connection_string):
-        self.connection_string = connection_string
+        self.db_disk_request.connection_string = connection_string
         return self
 
     def set_can_zip(self, can_zip):
-        self.can_zip = can_zip
+        self.db_disk_request.can_zip = can_zip
         return self
 
     def set_rows_per_file(self, rows_per_file):
-        self.rows_per_file = rows_per_file
+        self.db_disk_request.rows_per_file = rows_per_file
+        return self
+    def set_dump_all_tables(self,dump_all_tables ):
+        self.db_disk_request.dump_all_tables = dump_all_tables
+        return self
+
+    def set_list_tables_query(self, list_tables_query):
+        self.db_disk_request.list_tables_query = list_tables_query
         return self
 
     def execute(self, query):
-        print(f"Executing query: {query}")
-        print(f"Using cache path: {self.cache_path}")
-        print(f"Cache name: {self.cache_name}")
-        print(f"Connection string: {self.connection_string}")
-        print(f"Database type: {self.db_type}")
-        return DbDiskRequest(self.connection_string, self.db_type, self.cache_path, self.cache_name, self.disk_file_type,
-                             self.can_zip, self.rows_per_file).execute(query)
+        # self.db_disk_request.dump()
+        self.db_disk_request.dump()
+        executor =  DbDiskRequestExecutor(self.db_disk_request)
+        return executor.execute(query)
         # Add actual database execution logic here
