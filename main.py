@@ -17,7 +17,7 @@ if __name__ == "__main__":
             .set_cache_path(CACHE_DIR)
             .set_cache_name("users_simple_cache")
             .set_connection_string(connection_string)
-            .set_dump_all_tables(False)
+            .set_dump_all_tables(True)
         )).execute("select * from equities")
         print(result)
     except Exception as e:
