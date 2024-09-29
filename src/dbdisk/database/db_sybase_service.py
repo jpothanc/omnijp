@@ -10,5 +10,6 @@ class DbSybaseService(DbService):
         return pyodbc.connect(self.connection_string)
 
     def get_all_tables_query(self):
-        return "SELECT name FROM sysobjects WHERE type='U' ORDER BY name"
+        # exec sp_tables @table_type = 'TABLE'
+        return ""
 

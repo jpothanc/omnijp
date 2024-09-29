@@ -16,6 +16,7 @@ class DbDiskRequest:
         self.rows_per_file = MAX_ROWS
         self.dump_all_tables = False
         self.list_tables_query = None
+        self.table_list = []
     def dump(self):
         print("\nClass Members:")
         for name, value in vars(self).items():
