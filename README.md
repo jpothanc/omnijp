@@ -19,7 +19,7 @@ pip install omnijp
 ## Usage
 ### DbDiskCache
 
-Here's an example of how to use the `DbDiskCache` class to cache database results:
+Here's an example of how to cache database results:
 
 ```python
 from src.dbdisk.db_disk_cache_builder import DbDiskCacheBuilder
@@ -39,6 +39,50 @@ result = DbDiskCacheBuilder.create(lambda x: (
     .set_can_zip(True)
 )).execute("select * from Users where retired != 1")
 ```
+Here's an example of how to cache all database tables:
+```python
+    
+        result = DbDiskCacheBuilder.create(lambda x: (
+            x.set_db_type(DbType.POSTGRESQL)
+            .set_disk_file_type(DiskFileType.CSV)
+            .set_cache_path(CACHE_DIR)
+            .set_cache_name("users_simple_cache")
+            .set_connection_string(connection_string)
+            .set_dump_all_tables(True)            
+        )).execute("")
+        
+        result = DbDiskCacheBuilder.create(lambda x: (
+            x.set_db_type(DbType.ORACLE)
+            .set_disk_file_type(DiskFileType.CSV)
+            .set_cache_path(CACHE_DIR)
+            .set_cache_name("users_simple_cache")
+            .set_connection_string(connection_string)
+            .set_dump_all_tables(True)
+            # provide a custom query to get the list of tables
+            .set_list_tables_query("SELECT table_name FROM user_tables")
+        )).execute("")
+
+  
+```
+Here's an example of how to cache selected tables:
+```python
+    try:
+        result = DbDiskCacheBuilder.create(lambda x: (
+            x.set_db_type(DbType.POSTGRESQL)
+            .set_disk_file_type(DiskFileType.CSV)
+            .set_cache_path(CACHE_DIR)
+            .set_cache_name("users_simple_cache")
+            .set_connection_string(connection_string)
+            .set_table_list(["equities", "student"])
+        )).execute("")
+        print(result)
+    except Exception as e:
+        print(e)
+    finally:
+        print("Done")
+```
+
+
 ### HttpCachedRequest
 And here's an example of how to use the `HttpCachedRequest` class to make a GET request and cache the result:
 

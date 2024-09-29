@@ -18,6 +18,7 @@ if __name__ == "__main__":
             .set_cache_name("users_simple_cache")
             .set_connection_string(connection_string)
             .set_dump_all_tables(True)
+            .set_list_tables_query("select table_name from information_schema.tables where table_schema = 'public'")
             .set_table_list(["equities", "student"])
         )).execute("select * from equities")
         print(result)
