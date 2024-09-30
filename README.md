@@ -133,6 +133,18 @@ if __name__ == "__main__":
 ```
 In this example, my_callback is a function that will be called with the response from the OpenAI API.
 
+### Secure File Transfer using PKCS12
+PKCS12 (Public Key Cryptography Standards #12) is a binary format for storing cryptographic objects like private keys, certificates, and certificate chains in a single encrypted file.
+Key Features:
+Encryption: Private keys and certificates can be encrypted with a password.
+Interoperability: Supported by multiple platforms (Java, OpenSSL, browsers, etc.).
+File Extensions: .p12 or .pfx.
+Extract the certificate and key from the p12 file
+```commandline
+ openssl pkcs12 -in <certificate.p12> -clcerts -nokeys -out <certificate.pem> -passin pass:<password>
+ openssl pkcs12 -in <certificate.p12> -nocerts -nodes  -out <key.pem> -passin pass:<password>   
+```
+
 ### OpenAIBot
 Synchronous version of the OpenAIBot class
 ```python

@@ -55,7 +55,6 @@ class DbDiskCacheBuilder:
         self.db_disk_request.table_list = table_list
         return self
 
-
     def execute(self, query):
         # self.db_disk_request.dump()
         self.db_disk_request.dump()

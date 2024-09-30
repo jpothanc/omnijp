@@ -5,11 +5,10 @@ from dotenv import load_dotenv
 from src.dbdisk.db_disk_cache_builder import DbDiskCacheBuilder
 from src.dbdisk.types import DbType, DiskFileType
 from tests.dbdisk.db_disk_request_test import CACHE_DIR
+from src.ftps.ftps_request_builder import FtpsRequestBuilder
 
-if __name__ == "__main__":
-    load_dotenv()
+def db_disk_test():
     connection_string = os.getenv("LOCAL_CONNECTION_STRING")
-
     try:
         result = DbDiskCacheBuilder.create(lambda x: (
             x.set_db_type(DbType.POSTGRESQL)
@@ -26,3 +25,24 @@ if __name__ == "__main__":
         print(e)
     finally:
         print("Done")
+
+
+def ftps_pkcs_test():
+    FtpsRequestBuilder.create(lambda x: (
+        x.set_server("ftps://localhost")
+        .set_port(990)
+        .set_username("test")
+        .set_cert_file("C:/temp/certificates/ftps/ftps.crt")
+        .set_private_key_file("C:/temp/certificates/ftps/ftps.key")
+        .set_local_path("C:/temp/ftps")
+        .set_remote_path("/home/test")
+    )).send()
+
+if __name__ == "__main__":
+    load_dotenv()
+    try:
+        ftps_pkcs_test()
+    except Exception as e:
+        print(e)
+
+
