@@ -7,30 +7,23 @@ from src.dbdisk.types import DbType, DiskFileType
 from tests.dbdisk.db_disk_request_test import CACHE_DIR
 from src.ftps.ftps_request_builder import FtpsRequestBuilder
 
+
+def create_logger(logger_name):
+    logger = logging.getLogger(logger_name)
+    logger.setLevel(logging.DEBUG)
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(formatter)
+    file_handler = logging.FileHandler('db_disk_test.log')
+    file_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)
+    logger.addHandler(file_handler)
+    return logger
+
+
 def db_disk_test():
     connection_string = os.getenv("LOCAL_CONNECTION_STRING")
-    
-    # Create a logger
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.INFO)
-    
-    # Create a file handler
-    file_handler = logging.FileHandler('db_disk_test.log')
-    file_handler.setLevel(logging.INFO)
-    
-    # Create a console handler
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)
-    
-    # Create a formatting for the logs
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    file_handler.setFormatter(formatter)
-    console_handler.setFormatter(formatter)
-    
-    # Add the handlers to the logger
-    logger.addHandler(file_handler)
-    logger.addHandler(console_handler)
-    
+    logger = create_logger("db_disk_cache")
     try:
         result = DbDiskCacheBuilder.create(lambda x: (
             x.set_db_type(DbType.POSTGRESQL)
@@ -41,11 +34,11 @@ def db_disk_test():
             .set_dump_all_tables(True)
             .set_list_tables_query("select table_name from information_schema.tables where table_schema = 'public'")
             .set_table_list(["equities", "student"])
-            # .set_logger(logger)  # Pass the logger here
+            .set_logger(logger)  # Pass the logger here
         )).execute("select * from equities")
         print(result)
     except Exception as e:
-        logger.exception("An error occurred:")
+        logger.exception("An error occurred:", e)
     finally:
         logger.info("Done")
 
