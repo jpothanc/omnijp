@@ -1,5 +1,5 @@
 import os
-
+import logging
 from dotenv import load_dotenv
 
 from src.dbdisk.db_disk_cache_builder import DbDiskCacheBuilder
@@ -9,6 +9,28 @@ from src.ftps.ftps_request_builder import FtpsRequestBuilder
 
 def db_disk_test():
     connection_string = os.getenv("LOCAL_CONNECTION_STRING")
+    
+    # Create a logger
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
+    
+    # Create a file handler
+    file_handler = logging.FileHandler('db_disk_test.log')
+    file_handler.setLevel(logging.INFO)
+    
+    # Create a console handler
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.INFO)
+    
+    # Create a formatting for the logs
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    file_handler.setFormatter(formatter)
+    console_handler.setFormatter(formatter)
+    
+    # Add the handlers to the logger
+    logger.addHandler(file_handler)
+    logger.addHandler(console_handler)
+    
     try:
         result = DbDiskCacheBuilder.create(lambda x: (
             x.set_db_type(DbType.POSTGRESQL)
@@ -19,12 +41,13 @@ def db_disk_test():
             .set_dump_all_tables(True)
             .set_list_tables_query("select table_name from information_schema.tables where table_schema = 'public'")
             .set_table_list(["equities", "student"])
+            # .set_logger(logger)  # Pass the logger here
         )).execute("select * from equities")
         print(result)
     except Exception as e:
-        print(e)
+        logger.exception("An error occurred:")
     finally:
-        print("Done")
+        logger.info("Done")
 
 
 def ftps_pkcs_test():
@@ -41,8 +64,10 @@ def ftps_pkcs_test():
 if __name__ == "__main__":
     load_dotenv()
     try:
-        ftps_pkcs_test()
+        # ftps_pkcs_test()
+        db_disk_test()
     except Exception as e:
+
         print(e)
 
 

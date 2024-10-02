@@ -1,16 +1,17 @@
 import ftplib
 import os
 import ssl
-from typing import List, Callable, Optional
+from typing import List
 
 from src.ftps.ftps_request import FtpsRequest
 
+
 class FtpsService:
 
-    def __init__(self, ftps_request: FtpsRequest, logger: Optional[Callable] = None):
+    def __init__(self, ftps_request: FtpsRequest, logger):
         self.ftps = None
         self.ftps_request = ftps_request
-        self.logger = logger or print
+        self.logger = logger
 
     def __enter__(self):
         self.connect()
@@ -21,7 +22,7 @@ class FtpsService:
 
     def connect(self):
         try:
-            self.logger(f"Connecting to FTPS server {self.ftps_request.server}")
+            self.logger.info(f"Connecting to FTPS server {self.ftps_request.server}")
             context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
             context.load_cert_chain(certfile=self.ftps_request.cert_file, keyfile=self.ftps_request.private_key_file)
             self.ftps = ftplib.FTP_TLS(context=context)
@@ -29,7 +30,7 @@ class FtpsService:
             self.ftps.login(self.ftps_request.username)
             self.ftps.prot_p()
         except Exception as e:
-            self.logger(f"Error connecting to FTPS server: {e}")
+            self.logger.error(f"Error connecting to FTPS server: {e}")
             raise
 
     def disconnect(self):
@@ -37,7 +38,7 @@ class FtpsService:
             try:
                 self.ftps.quit()
             except Exception as e:
-                self.logger(f"Error disconnecting from FTPS server: {e}")
+                self.logger.error(f"Error disconnecting from FTPS server: {e}")
                 raise
             finally:
                 self.ftps = None
@@ -58,9 +59,9 @@ class FtpsService:
         try:
             with open(local_path, 'rb') as f:
                 self.ftps.storbinary(f'STOR {remote_path}', f)
-            self.logger(f"File {local_path} uploaded successfully")
+            self.logger.info(f"File {local_path} uploaded successfully")
         except Exception as e:
-            self.logger(f"Error uploading file {local_path}: {e}")
+            self.logger.error(f"Error uploading file {local_path}: {e}")
             raise
 
     def _upload_multiple_files(self, files: List[str]):

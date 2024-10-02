@@ -1,16 +1,24 @@
 import os
 
+from src.common.base_builder import BaseBuilder
 from src.ftps.ftps_request import FtpsRequest
-from src.ftps.ftps_service import  FtpsService
-class FtpsRequestBuilder:
-    def __init__(self):
+from src.ftps.ftps_service import FtpsService
+
+
+class FtpsRequestBuilder(BaseBuilder):
+    def __init__(self ):
         self.ftps_request = FtpsRequest()
+        self.logger = None
 
     @classmethod
     def create(cls, setup):
         builder = cls()
         setup(builder)
         return builder
+    
+    def set_logger(self, logger):
+        self.logger = logger
+        return self
 
     def set_server(self, server):
         self.ftps_request.server = server
@@ -36,16 +44,19 @@ class FtpsRequestBuilder:
     def set_local_path(self, local_path):
         self.ftps_request.local_file_path = local_path
         return self
+    
+    def build(self):
+        if  self.logger is None:
+            self._create_default_console_logger()
+        return self
 
     def send(self):
-        # self.validate_request(self.ftps_request)
-        with FtpsService(self.ftps_request) as ftps_service:
+        self.build()
+        self.validate_request(self.ftps_request)
+        with FtpsService(self.ftps_request, logger=self.logger) as ftps_service:
             ftps_service.send()
 
-
-    @staticmethod
-    def validate_request(ftps_request):
-
+    def validate_request(self, ftps_request):
         if ftps_request.server is None or "":
             raise Exception("Server cannot be empty");
         
