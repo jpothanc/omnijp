@@ -16,9 +16,7 @@ class FtpsRequestBuilder(BaseBuilder):
         setup(builder)
         return builder
     
-    def set_logger(self, logger):
-        self.logger = logger
-        return self
+   
 
     def set_server(self, server):
         self.ftps_request.server = server
@@ -44,16 +42,10 @@ class FtpsRequestBuilder(BaseBuilder):
     def set_local_path(self, local_path):
         self.ftps_request.local_file_path = local_path
         return self
-    
-    def build(self):
-        if  self.logger is None:
-            self._create_default_console_logger()
-        return self
 
     def send(self):
-        self.build()
         self.validate_request(self.ftps_request)
-        with FtpsService(self.ftps_request, logger=self.logger) as ftps_service:
+        with FtpsService(self.ftps_request) as ftps_service:
             ftps_service.send()
 
     def validate_request(self, ftps_request):

@@ -10,13 +10,14 @@ class DbDiskCacheCsv(DbDiskCache):
             local_cache_dir = self.get_local_cache_path()
             os.makedirs(local_cache_dir, exist_ok=True)
             subsets = split_into_subsets(data, self.rows_per_file)
-            count = 1
             total = 0
-            for subset in subsets:
-                file_path = os.path.join(local_cache_dir, f"{self.cache_name}_{count}.csv")
+           
+            for i, subset in enumerate(subsets, 1):
+                file_name = f"{self.cache_name}.csv" if len(subsets) == 1 else f"{self.cache_name}_{i}.csv"
+                file_path = os.path.join(local_cache_dir, file_name)
                 self._save_file(header, subset, file_path)
-                count += 1
                 total += len(subset)
+
             self.logger.info(f"Total records saved: {total}")
             if self.can_zip:
                 zip_directory(local_cache_dir, local_cache_dir)

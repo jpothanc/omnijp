@@ -1,17 +1,19 @@
 import ftplib
+import logging
 import os
 import ssl
 from typing import List
+
 
 from src.ftps.ftps_request import FtpsRequest
 
 
 class FtpsService:
 
-    def __init__(self, ftps_request: FtpsRequest, logger):
+    def __init__(self, ftps_request: FtpsRequest ):
         self.ftps = None
         self.ftps_request = ftps_request
-        self.logger = logger
+        self.logger = logging.getLogger(__name__)
 
     def __enter__(self):
         self.connect()

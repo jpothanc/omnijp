@@ -34,11 +34,13 @@ def db_disk_test():
             .set_dump_all_tables(True)
             .set_list_tables_query("select table_name from information_schema.tables where table_schema = 'public'")
             .set_table_list(["equities", "student"])
-            .set_logger(logger)  # Pass the logger here
+            # .set_can_zip(True)
+            .set_rows_per_file(10)
         )).execute("select * from equities")
         print(result)
     except Exception as e:
         logger.exception("An error occurred:", e)
+        pass
     finally:
         logger.info("Done")
 
@@ -57,8 +59,8 @@ def ftps_pkcs_test():
 if __name__ == "__main__":
     load_dotenv()
     try:
-        # ftps_pkcs_test()
-        db_disk_test()
+         # ftps_pkcs_test()
+         db_disk_test()
     except Exception as e:
 
         print(e)

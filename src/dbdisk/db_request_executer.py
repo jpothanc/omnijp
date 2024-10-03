@@ -1,3 +1,4 @@
+import logging
 import os
 from concurrent.futures import ThreadPoolExecutor
 
@@ -7,9 +8,9 @@ from src.dbdisk.models.db_disk_request import DbDiskRequest
 
 
 class DbDiskRequestExecutor:
-    def __init__(self, db_disk_request: DbDiskRequest, logger):
+    def __init__(self, db_disk_request: DbDiskRequest):
         self.db_disk_request = db_disk_request
-        self.logger = logger
+        self.logger = logging.getLogger(__name__)
 
     def __enter__(self):
         return self
@@ -79,5 +80,5 @@ class DbDiskRequestExecutor:
         header, data =   db_service.execute(query)
         self.db_disk_request.cache_name =table
         self.logger.info(f"creating db disk cache for table: {table}")
-        result =  DbDiskFactory.create_db_disk(self.db_disk_request, self.logger).save(header, data)
+        result =  DbDiskFactory.create_db_disk(self.db_disk_request).save(header, data)
         return result

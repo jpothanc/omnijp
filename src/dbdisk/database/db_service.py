@@ -1,4 +1,5 @@
 from abc import abstractmethod
+import logging
 
 import psycopg2
 import pymssql
@@ -8,21 +9,22 @@ class DbService:
 
     def __init__(self, connection_string):
         self.connection_string = connection_string
+        self.logger = logging.getLogger(__name__)
 
     def execute(self, query):
         connection = None
         cursor = None
         try:
-            print("Executing query: ", query)
-            print("Connecting to database...")
+            self.logger.info("Executing query: ", query)
+            self.logger.info("Connecting to database...")
             connection = self.connect()
-            print("Connected to database")
+            self.logger.info("Connected to database")
             cursor = connection.cursor()
-            print("Executing query...")
+            self.logger.info("Executing query...")
             cursor.execute(query)
             header = [desc[0] for desc in cursor.description]
             result = cursor.fetchall()
-            print("Query executed")
+            self.logger.info("Query executed")
         except Exception as e:
             self.handle_error(e)
             result = None

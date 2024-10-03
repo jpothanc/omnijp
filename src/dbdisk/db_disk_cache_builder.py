@@ -7,7 +7,6 @@ from src.dbdisk.types import DbType, DiskFileType
 class DbDiskCacheBuilder(BaseBuilder):
     def __init__(self):
         self.db_disk_request = DbDiskRequest()
-        self.logger = None
 
     @classmethod
     def create(cls, setup):
@@ -16,9 +15,6 @@ class DbDiskCacheBuilder(BaseBuilder):
         setup(builder)
         return builder
     
-    def set_logger(self, logger):
-        self.logger = logger
-        return self
 
     def set_db_type(self, db_type: DbType):
         self.db_disk_request.db_type = db_type
@@ -58,14 +54,10 @@ class DbDiskCacheBuilder(BaseBuilder):
         self.db_disk_request.table_list = table_list
         return self
     
-    def build(self):
-        if  self.logger is None:
-            self._create_default_console_logger()
-        return self
+   
 
     def execute(self, query):
         # self.db_disk_request.dump()
-        self.build()
         self.db_disk_request.dump()
-        with DbDiskRequestExecutor(self.db_disk_request, self.logger) as executor:
+        with DbDiskRequestExecutor(self.db_disk_request) as executor:
             return executor.execute(query)
