@@ -1,3 +1,4 @@
+import logging
 import os
 import csv
 from src.dbdisk.caches.db_disk_cache import DbDiskCache
@@ -5,6 +6,7 @@ from src.common.helper import split_into_subsets, zip_directory
 
 
 class DbDiskCacheCsv(DbDiskCache):
+
     def save(self, header, data):
         try:
             local_cache_dir = self.get_local_cache_path()

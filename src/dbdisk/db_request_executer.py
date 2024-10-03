@@ -5,6 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 from src.dbdisk.database.db_service_factory import DbServiceFactory
 from src.dbdisk.db_disk_factory import DbDiskFactory
 from src.dbdisk.models.db_disk_request import DbDiskRequest
+from src.dbdisk.models.db_disk_results import  DbDiskResults
 
 
 class DbDiskRequestExecutor:
@@ -35,6 +36,7 @@ class DbDiskRequestExecutor:
                 self.logger.info(f"dumping query: {query}")
                 header, data = db_service.execute(query)
                 return DbDiskFactory.create_db_disk(self.db_disk_request).save(header, data)
+                # results = DbDiskResults()
         except Exception as e:
             raise Exception("Error dumping data to disk", e)
 
