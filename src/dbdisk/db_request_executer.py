@@ -1,11 +1,13 @@
 import logging
 import os
 from concurrent.futures import ThreadPoolExecutor
+import concurrent.futures
+import time
 
 from src.dbdisk.database.db_service_factory import DbServiceFactory
 from src.dbdisk.db_disk_factory import DbDiskFactory
 from src.dbdisk.models.db_disk_request import DbDiskRequest
-from src.dbdisk.models.db_disk_results import  DbDiskResults
+from src.dbdisk.models.db_disk_results import  DbDiskResults, TableInfo
 
 
 class DbDiskRequestExecutor:
@@ -34,9 +36,13 @@ class DbDiskRequestExecutor:
                 return self.dump_tables(db_service, self.db_disk_request.table_list)
             else:
                 self.logger.info(f"dumping query: {query}")
+                results = DbDiskResults()
+                results.set_start_time()
                 header, data = db_service.execute(query)
-                return DbDiskFactory.create_db_disk(self.db_disk_request).save(header, data)
-                # results = DbDiskResults()
+                DbDiskFactory.create_db_disk(self.db_disk_request).save(header, data)
+                results.add_table(table_info=TableInfo(name="query", row_count=len(data)))
+                results.set_end_time()
+                return results
         except Exception as e:
             raise Exception("Error dumping data to disk", e)
 
@@ -50,8 +56,22 @@ class DbDiskRequestExecutor:
         """
         self.logger.info("start dumping selected tables")
         max_workers = min(5, os.cpu_count() + 4)  # Adjust based on CPU count and workload
+        results = DbDiskResults()
+        results.set_start_time()
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
-            return executor.map(lambda x: self.dump_table(x, db_service), table_list)
+            dump_table_tasks = {executor.submit(self.dump_table, table, db_service): table for table in table_list}
+
+            # Wait for all tasks to complete
+            for future in concurrent.futures.as_completed(dump_table_tasks):
+                table = dump_table_tasks[future]
+                try:
+                    table_info = future.result()
+                    results.add_table(table_info)
+                except Exception as exc:
+                    self.logger.error(f"Table {table} generated an exception: {exc}")
+        
+        results.set_end_time()
+        return results
 
     def dump_all_tables(self,db_service, list_tables_query):
         """
@@ -77,10 +97,14 @@ class DbDiskRequestExecutor:
         :param db_service:
         :return:
         """
+        star_time = time.time()
         query = f"select * from {table}"
         self.logger.info(f"dumping table: {query}")
         header, data =   db_service.execute(query)
         self.db_disk_request.cache_name =table
         self.logger.info(f"creating db disk cache for table: {table}")
         result =  DbDiskFactory.create_db_disk(self.db_disk_request).save(header, data)
-        return result
+        end_time = time.time()
+        elapsed_time = round((end_time - star_time) * 1000, 3)  # Round to 3 decimal places
+        table_info = TableInfo(name=table, row_count=len(data), time_taken=str(elapsed_time) + " ms")
+        return table_info
