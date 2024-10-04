@@ -1,7 +1,8 @@
 from src.common.base_builder import BaseBuilder
+from src.common.database.db_type import DbType
 from src.dbdisk.db_disk_request_executer import DbDiskRequestExecutor
-from src.dbdisk.models.db_disk_request import DbDiskRequest
-from src.dbdisk.types import DbType, DiskFileType
+from src.dbdisk.db_disk_request import DbDiskRequest
+from src.common.caches.disk_cache_type import DiskFileType
 
 
 class DbDiskCacheBuilder(BaseBuilder):

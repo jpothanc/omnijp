@@ -2,8 +2,9 @@ import os
 import logging
 from dotenv import load_dotenv
 
+from src.common.caches.disk_cache_type import DiskFileType
+from src.common.database.db_type import DbType
 from src.dbdisk.db_disk_cache_builder import DbDiskCacheBuilder
-from src.dbdisk.types import DbType, DiskFileType
 from src.dbrequest.db_request_builder import DbRequestBuilder
 from tests.dbdisk.db_disk_request_test import CACHE_DIR
 from src.ftps.ftps_request_builder import FtpsRequestBuilder

@@ -4,8 +4,9 @@ import unittest
 
 from dotenv import load_dotenv
 
+from src.common.database.db_type import DbType
 from src.dbdisk.db_disk_cache_builder import DbDiskCacheBuilder
-from src.dbdisk.types import DbType, DiskFileType
+from src.common.caches.disk_cache_type import DiskFileType
 
 CACHE_DIR = r"C:\temp\diskCache"
 class TestDbDiskRequest(unittest.TestCase):

@@ -6,8 +6,8 @@ import time
 
 from src.common.database.db_service_factory import DbServiceFactory
 from src.dbdisk.db_disk_factory import DbDiskFactory
-from src.dbdisk.models.db_disk_request import DbDiskRequest
-from src.dbdisk.models.db_disk_results import  DbDiskResults, TableDumpResult
+from src.dbdisk.db_disk_request import DbDiskRequest
+from src.dbdisk.db_disk_results import  DbDiskResults, TableDumpResult
 
 
 class DbDiskRequestExecutor:

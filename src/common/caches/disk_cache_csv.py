@@ -1,11 +1,10 @@
-import logging
 import os
 import csv
-from src.dbdisk.caches.db_disk_cache import DbDiskCache
+from src.common.caches.disk_cache import DiskCache
 from src.common.helper import split_into_subsets, zip_directory
 
 
-class DbDiskCacheCsv(DbDiskCache):
+class DiskCacheCsv(DiskCache):
 
     def save(self, header, data):
         try:

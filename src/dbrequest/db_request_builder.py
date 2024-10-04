@@ -1,4 +1,4 @@
-from src.dbdisk.types import DbType
+from src.common.database.db_type import DbType
 from src.dbrequest.db_request import DbRequest
 from src.dbrequest.db_request_executor import DbRequestExecutor
 from src.dbrequest.db_results import DbResult

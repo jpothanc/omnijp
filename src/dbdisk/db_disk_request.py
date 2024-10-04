@@ -1,5 +1,7 @@
 from dataclasses import dataclass
-from src.dbdisk.types import DiskFileType, DbType
+
+from src.common.database.db_type import DbType
+from src.common.caches.disk_cache_type import DiskFileType
 
 MAX_ROWS = 1000000
 

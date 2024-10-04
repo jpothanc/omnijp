@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from src.dbdisk.types import DbType
+from src.common.database.db_type import DbType
 
 
 @dataclass

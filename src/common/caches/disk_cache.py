@@ -2,7 +2,7 @@ import logging
 from abc import ABC, abstractmethod
 
 
-class DbDiskCache:
+class DiskCache:
     def __init__(self, cache_dir, cache_name, can_zip=False, rows_per_file=1000000):
         self.cache_dir = cache_dir
         self.cache_name = cache_name

@@ -2,7 +2,7 @@ from src.common.database.db_oracle_service import DbOracleService
 from src.common.database.db_pg_service import DbPgService
 from src.common.database.db_service import DbService
 from src.common.database.db_sybase_service import DbSybaseService
-from src.dbdisk.types import DbType
+from src.common.database.db_type import DbType
 
 
 class DbServiceFactory:
