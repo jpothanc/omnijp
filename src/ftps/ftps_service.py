@@ -4,13 +4,12 @@ import os
 import ssl
 from typing import List
 
-
 from src.ftps.ftps_request import FtpsRequest
 
 
 class FtpsService:
 
-    def __init__(self, ftps_request: FtpsRequest ):
+    def __init__(self, ftps_request: FtpsRequest):
         self.ftps = None
         self.ftps_request = ftps_request
         self.logger = logging.getLogger(__name__)
@@ -75,4 +74,3 @@ class FtpsService:
             if file.endswith(pattern):
                 local_path = os.path.join(directory, file)
                 self._upload_file(local_path, file)
-

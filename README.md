@@ -5,8 +5,10 @@ It now supports features for caching database results to disk and making HTTP re
 ## Features
 
 - **Database Disk Cache**: OmniJP provides a way to cache database results to disk. This is useful for large datasets that you don't want to query every time. The data is saved in CSV format and can be optionally zipped.
-
-- **HTTP Requests**: OmniJP includes a simple HTTP request class with caching support. This can be used to make GET requests and cache the results for future use.
+- **Database Request**: OmniJP provides a way to make a database request and get the results. This is useful for making quick queries to a database and getting the results in a structured format.
+- **Ftp Secure File Transfer**: OmniJP provides a way to securely transfer files using PKCS12 encryption. This is useful for transferring sensitive files between systems.
+- **HTTP Cached Request**: OmniJP provides a way to make HTTP requests and cache the results. This is useful for making GET requests to APIs and caching the results for future use.
+- **OpenAI Bot**: OmniJP provides a way to interact with the OpenAI API and get responses to questions. This is useful for building chatbots or other AI-powered applications.
 
 ## Installation
 

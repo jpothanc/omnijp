@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 
-from src.common.database.db_type import DbType
 from src.common.caches.disk_cache_type import DiskFileType
+from src.common.database.db_type import DbType
 
 MAX_ROWS = 1000000
+
 
 @dataclass
 class DbDiskRequest:
@@ -17,14 +18,10 @@ class DbDiskRequest:
     rows_per_file: int = MAX_ROWS
     dump_all_tables: bool = False
     list_tables_query: str = None
-    table_list:list  = None
+    table_list: list = None
     query = None
 
     def dump(self):
         print("\nClass Members:")
         for name, value in vars(self).items():
             print(f"{name}: {value}")
-
-    
-
-

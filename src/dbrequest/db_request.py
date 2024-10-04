@@ -7,5 +7,5 @@ from src.common.database.db_type import DbType
 class DbRequest:
     db_type = DbType.NONE
     connection_string = None
-    table_list:list = None
+    table_list: list = None
     query = None

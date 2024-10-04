@@ -1,5 +1,5 @@
 # Changelog
-## [2.19.0] - 2024-10-03
+## [2.10.0] - 2024-10-03
 ### Added
 -Added simple dbrequest class to handle database requests
 ### Fixed

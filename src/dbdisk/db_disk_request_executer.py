@@ -1,13 +1,13 @@
+import concurrent.futures
 import logging
 import os
-from concurrent.futures import ThreadPoolExecutor
-import concurrent.futures
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 from src.common.database.db_service_factory import DbServiceFactory
 from src.dbdisk.db_disk_factory import DbDiskFactory
 from src.dbdisk.db_disk_request import DbDiskRequest
-from src.dbdisk.db_disk_results import  DbDiskResults, TableDumpResult
+from src.dbdisk.db_disk_results import DbDiskResults, TableDumpResult
 
 
 class DbDiskRequestExecutor:
@@ -18,6 +18,7 @@ class DbDiskRequestExecutor:
 
     def __enter__(self):
         return self
+
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
 
@@ -27,7 +28,8 @@ class DbDiskRequestExecutor:
         :param query:
         :return:
         """
-        db_service = DbServiceFactory.create_db_service(self.db_disk_request.db_type, self.db_disk_request.connection_string)
+        db_service = DbServiceFactory.create_db_service(self.db_disk_request.db_type,
+                                                        self.db_disk_request.connection_string)
         try:
             if self.db_disk_request.dump_all_tables:
                 self.logger.info("start dumping all tables")
@@ -46,7 +48,6 @@ class DbDiskRequestExecutor:
                 return results
         except Exception as e:
             raise Exception("Error dumping data to disk", e)
-
 
     def dump_selected_tables(self, db_service, table_list):
         """
@@ -69,11 +70,11 @@ class DbDiskRequestExecutor:
                     results.add_table(table_info)
                 except Exception as exc:
                     self.logger.error(f"Table {table} generated an exception: {exc}")
-        
+
         results.set_end_time()
         return results
 
-    def dump_all_tables(self,db_service, list_tables_query):
+    def dump_all_tables(self, db_service, list_tables_query):
         """
         dump all tables
         possible to provide a custom query to get all tables or use the default query
@@ -90,8 +91,7 @@ class DbDiskRequestExecutor:
         table_list = [x[0] for x in data]
         return self.dump_selected_tables(db_service, table_list)
 
-
-    def dump_table(self,table, db_service):
+    def dump_table(self, table, db_service):
         """
         dump table to disk
         :param table:
@@ -101,8 +101,8 @@ class DbDiskRequestExecutor:
         start_time = time.time()
         self.logger.info(f"dumping table: {table}")
         query = f"select * from {table}"
-        header, data =   db_service.execute(query)
-        self.db_disk_request.cache_name =table
+        header, data = db_service.execute(query)
+        self.db_disk_request.cache_name = table
         self.logger.info(f"creating db disk cache for table: {table}")
         DbDiskFactory.create_db_disk(self.db_disk_request).save(header, data)
         end_time = time.time()

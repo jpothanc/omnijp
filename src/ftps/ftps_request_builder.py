@@ -6,7 +6,7 @@ from src.ftps.ftps_service import FtpsService
 
 
 class FtpsRequestBuilder(BaseBuilder):
-    def __init__(self ):
+    def __init__(self):
         self.ftps_request = FtpsRequest()
         self.logger = None
 
@@ -15,8 +15,6 @@ class FtpsRequestBuilder(BaseBuilder):
         builder = cls()
         setup(builder)
         return builder
-    
-   
 
     def set_server(self, server):
         self.ftps_request.server = server
@@ -25,6 +23,7 @@ class FtpsRequestBuilder(BaseBuilder):
     def set_port(self, port):
         self.ftps_request.port = port
         return self
+
     def set_username(self, username):
         self.ftps_request.username = username
         return self
@@ -32,9 +31,11 @@ class FtpsRequestBuilder(BaseBuilder):
     def set_cert_file(self, cert_file):
         self.ftps_request.cert_file = cert_file
         return self
+
     def set_private_key_file(self, private_key_file):
         self.ftps_request.private_key_file = private_key_file
         return self
+
     def set_remote_path(self, remote_path):
         self.ftps_request.remote_file_path = remote_path
         return self
@@ -51,13 +52,13 @@ class FtpsRequestBuilder(BaseBuilder):
     def validate_request(self, ftps_request):
         if ftps_request.server is None or "":
             raise Exception("Server cannot be empty");
-        
+
         if ftps_request.port is None or "":
             raise Exception("Port cannot be empty");
-    
-        if  ftps_request.username is None or "" :
+
+        if ftps_request.username is None or "":
             raise Exception("UserName cannot be empty");
-    
+
         if not os.path.exists(ftps_request.cert_file):
             raise Exception(f"Certificate file {ftps_request.cert_file} does not exist")
 

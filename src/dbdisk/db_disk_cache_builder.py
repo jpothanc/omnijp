@@ -1,8 +1,8 @@
 from src.common.base_builder import BaseBuilder
-from src.common.database.db_type import DbType
-from src.dbdisk.db_disk_request_executer import DbDiskRequestExecutor
-from src.dbdisk.db_disk_request import DbDiskRequest
 from src.common.caches.disk_cache_type import DiskFileType
+from src.common.database.db_type import DbType
+from src.dbdisk.db_disk_request import DbDiskRequest
+from src.dbdisk.db_disk_request_executer import DbDiskRequestExecutor
 
 
 class DbDiskCacheBuilder(BaseBuilder):
@@ -14,7 +14,6 @@ class DbDiskCacheBuilder(BaseBuilder):
         builder = cls()
         setup(builder)
         return builder
-    
 
     def set_db_type(self, db_type: DbType):
         self.db_disk_request.db_type = db_type
@@ -43,15 +42,19 @@ class DbDiskCacheBuilder(BaseBuilder):
     def set_rows_per_file(self, rows_per_file):
         self.db_disk_request.rows_per_file = rows_per_file
         return self
-    def set_dump_all_tables(self,dump_all_tables ):
+
+    def set_dump_all_tables(self, dump_all_tables):
         self.db_disk_request.dump_all_tables = dump_all_tables
         return self
+
     def set_list_tables_query(self, list_tables_query):
         self.db_disk_request.list_tables_query = list_tables_query
         return self
+
     def set_table_list(self, table_list):
         self.db_disk_request.table_list = table_list
         return self
+
     def set_query(self, dump_query):
         self.db_disk_request.query = dump_query
         return self

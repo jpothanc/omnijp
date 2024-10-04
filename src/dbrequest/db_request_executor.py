@@ -1,8 +1,8 @@
 import concurrent
 import logging
 import os
-from concurrent.futures import ThreadPoolExecutor
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 from src.common.database.db_service_factory import DbServiceFactory
 from src.dbrequest.db_request import DbRequest
@@ -19,7 +19,8 @@ class DbRequestExecutor:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
-    def execute(self)->DbResult:
+
+    def execute(self) -> DbResult:
         """
         execute the query and dump the result to disk
         :param query:
@@ -27,7 +28,7 @@ class DbRequestExecutor:
         """
         db_service = DbServiceFactory.create_db_service(self.db_request.db_type, self.db_request.connection_string)
         try:
-           
+
             if self.db_request.table_list:
                 self.logger.info(f"start dumping selected tables {self.db_request.table_list}")
                 return self.query_selected_tables(db_service, self.db_request.table_list)
@@ -68,7 +69,6 @@ class DbRequestExecutor:
         results.set_end_time()
         return results
 
-
     def query_table(self, table, db_service):
         """
         dump table to disk
@@ -81,9 +81,6 @@ class DbRequestExecutor:
         header, data = db_service.execute(self.db_request.query)
         end_time = time.time()
         elapsed_time = round((end_time - start_time) * 1000, 3)  # Round to 3 decimal places
-        result = TableResult(name=table, row_count=len(data), header=header, data=data, time_taken=str(elapsed_time) + " ms")
+        result = TableResult(name=table, row_count=len(data), header=header, data=data,
+                             time_taken=str(elapsed_time) + " ms")
         return result
-
-
-
-        

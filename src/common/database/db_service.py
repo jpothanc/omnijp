@@ -1,5 +1,5 @@
-from abc import abstractmethod
 import logging
+from abc import abstractmethod
 
 import psycopg2
 import pymssql
@@ -47,6 +47,7 @@ class DbService:
         error_type = type(error)
         message = error_messages.get(error_type, "Unknown error")
         raise Exception(message, error)
+
     @abstractmethod
     def get_all_tables_query(self):
         pass

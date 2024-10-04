@@ -92,9 +92,9 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
     try:
-         # ftps_pkcs_test()
-          db_disk_test()
-          db_request_test()
+          ftps_pkcs_test()
+          # db_disk_test()
+          # db_request_test()
     except Exception as e:
 
 

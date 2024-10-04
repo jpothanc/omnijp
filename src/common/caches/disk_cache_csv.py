@@ -1,5 +1,6 @@
-import os
 import csv
+import os
+
 from src.common.caches.disk_cache import DiskCache
 from src.common.helper import split_into_subsets, zip_directory
 
@@ -12,7 +13,7 @@ class DiskCacheCsv(DiskCache):
             os.makedirs(local_cache_dir, exist_ok=True)
             subsets = split_into_subsets(data, self.rows_per_file)
             total = 0
-           
+
             for i, subset in enumerate(subsets, 1):
                 file_name = f"{self.cache_name}.csv" if len(subsets) == 1 else f"{self.cache_name}_{i}.csv"
                 file_path = os.path.join(local_cache_dir, file_name)
@@ -31,7 +32,6 @@ class DiskCacheCsv(DiskCache):
     def get_local_cache_path(self):
         return os.path.join(self.cache_dir, self.cache_name) if self.can_zip else self.cache_dir
 
-    
     def _save_file(self, header, data, file_path):
         try:
             with open(file_path, 'w', newline='') as csv_file:

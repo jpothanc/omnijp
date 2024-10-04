@@ -13,22 +13,23 @@ class DbRequestBuilder:
         builder = cls()
         setup(builder)
         return builder
-    
+
     def set_db_type(self, db_type: DbType):
         self.db_request.db_type = db_type
         return self
+
     def set_connection_string(self, connection_string):
         self.db_request.connection_string = connection_string
         return self
+
     def set_table_list(self, table_list):
         self.db_request.table_list = table_list
         return self
+
     def set_query(self, query):
         self.db_request.query = query
         return self
-    def execute(self)->DbResult:
+
+    def execute(self) -> DbResult:
         with DbRequestExecutor(self.db_request) as executor:
             return executor.execute()
-
-    
-
