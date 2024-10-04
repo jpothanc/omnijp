@@ -10,6 +10,7 @@ class DbService:
     def __init__(self, connection_string):
         self.connection_string = connection_string
         self.logger = logging.getLogger(__name__)
+        self.logger.addHandler(logging.NullHandler())
 
     def execute(self, query):
         connection = None

@@ -6,7 +6,7 @@ import socket
 
 
 @dataclass
-class TableInfo:
+class TableDumpResult:
     name: str
     row_count: int
     time_taken: str = ""
@@ -22,7 +22,7 @@ class DbDiskResults:
         self.host_name:str = socket.gethostname()
         self.total_tables_dumped: int = 0
         self.total_rows_dumped: int = 0
-        self.tables:list[TableInfo] = []
+        self.tables:list[TableDumpResult] = []
 
     def set_start_time(self):
         self.start_time =  datetime.now().strftime(self.DATETIME_FORMAT)[:-3]
@@ -31,7 +31,7 @@ class DbDiskResults:
         self.end_time =  datetime.now().strftime(self.DATETIME_FORMAT)[:-3]
 
     
-    def add_table(self, table_info: TableInfo):
+    def add_table(self, table_info: TableDumpResult):
         self.tables.append(table_info)
         self.total_tables_dumped += 1
         self.total_rows_dumped += table_info.row_count

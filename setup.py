@@ -11,6 +11,7 @@ setup(
         'psycopg2>=2.9.9',
         'openai~=1.30.5',
         'cx_Oracle~=8.3.0'
+        'pymssql~=2.3.0'
     ],
     entry_points={
         'console_scripts': [

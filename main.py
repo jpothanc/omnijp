@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 
 from src.dbdisk.db_disk_cache_builder import DbDiskCacheBuilder
 from src.dbdisk.types import DbType, DiskFileType
+from src.dbrequest.db_request_builder import DbRequestBuilder
 from tests.dbdisk.db_disk_request_test import CACHE_DIR
 from src.ftps.ftps_request_builder import FtpsRequestBuilder
 
@@ -44,6 +45,32 @@ def db_disk_test():
     finally:
         logger.info("Done")
 
+def db_request_test():
+    connection_string = os.getenv("LOCAL_CONNECTION_STRING")
+    logger = create_logger("db_request")
+    try:
+        result = DbRequestBuilder.create(lambda x: (
+            x.set_db_type(DbType.POSTGRESQL)
+            .set_connection_string(connection_string)
+            # .set_table_list(["equities", "student"])
+        )).execute("select * from equities")
+        print(result.to_json())
+        
+        for table in result.tables:
+            print(f"\nTable: {table.name}")
+            print("Header:")
+            print(table.header)
+            print("Data:")
+            for row in table.data:
+                print(row)
+        
+    except Exception as e:
+        logger.exception("An error occurred:", e)
+        pass
+    finally:
+        logger.info("Done")
+
+
 
 def ftps_pkcs_test():
     FtpsRequestBuilder.create(lambda x: (
@@ -61,7 +88,9 @@ if __name__ == "__main__":
     try:
          # ftps_pkcs_test()
          db_disk_test()
+         db_request_test()
     except Exception as e:
+
 
         print(e)
 

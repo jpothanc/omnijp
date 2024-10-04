@@ -14,6 +14,7 @@ class DbDiskRequestExecutor:
     def __init__(self, db_disk_request: DbDiskRequest):
         self.db_disk_request = db_disk_request
         self.logger = logging.getLogger(__name__)
+        self.logger.addHandler(logging.NullHandler())
 
     def __enter__(self):
         return self

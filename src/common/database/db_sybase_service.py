@@ -1,4 +1,4 @@
-from src.dbdisk.database.db_service import DbService
+from src.common.database.db_service import DbService
 
 
 class DbSybaseService(DbService):

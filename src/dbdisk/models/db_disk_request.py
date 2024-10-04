@@ -1,6 +1,3 @@
-from src.dbdisk.database.db_service import DbService
-from src.dbdisk.database.db_service_factory import DbServiceFactory
-from src.dbdisk.db_disk_factory import DbDiskFactory
 from src.dbdisk.types import DiskFileType, DbType
 
 MAX_ROWS = 1000000

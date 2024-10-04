@@ -1,5 +1,5 @@
 from src.common.base_builder import BaseBuilder
-from src.dbdisk.db_request_executer import DbDiskRequestExecutor
+from src.dbdisk.db_disk_request_executer import DbDiskRequestExecutor
 from src.dbdisk.models.db_disk_request import DbDiskRequest
 from src.dbdisk.types import DbType, DiskFileType
 
@@ -11,7 +11,6 @@ class DbDiskCacheBuilder(BaseBuilder):
     @classmethod
     def create(cls, setup):
         builder = cls()
-        print("create")
         setup(builder)
         return builder
     
@@ -57,7 +56,6 @@ class DbDiskCacheBuilder(BaseBuilder):
    
 
     def execute(self, query):
-        # self.db_disk_request.dump()
         self.db_disk_request.dump()
         with DbDiskRequestExecutor(self.db_disk_request) as executor:
             return executor.execute(query)
