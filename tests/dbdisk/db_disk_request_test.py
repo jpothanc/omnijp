@@ -52,7 +52,7 @@ class TestDbDiskRequest(unittest.TestCase):
         self.assertEqual(cache_file_exists, True)
         self.assertEqual(result.total_rows_dumped > 0, True)
         self.assertEqual(result.total_tables_dumped > 1, True)
-        self.assertEqual(len(result.dump_selected_table_list) > 1, True)
+        self.assertEqual(len(result.table_list) > 1, True)
        
 
     def test_db_disk_request_dump_table_list(self):
@@ -60,7 +60,7 @@ class TestDbDiskRequest(unittest.TestCase):
             x.set_db_type(DbType.POSTGRESQL)
             .set_disk_file_type(DiskFileType.CSV)
             .set_cache_path(CACHE_DIR)
-            .set_dump_selected_table_list(["equities", "student"])
+            .set_table_list(["equities", "student"])
             .set_connection_string(self.connection_string)
         )).execute("")
 
@@ -68,7 +68,7 @@ class TestDbDiskRequest(unittest.TestCase):
         self.assertEqual(cache_file_exists, True)
         self.assertEqual(result.total_rows_dumped > 0, True)
         self.assertEqual(result.total_tables_dumped > 1, True)
-        self.assertEqual(len(result.dump_selected_table_list) > 1, True)
+        self.assertEqual(len(result.table_list) > 1, True)
        
 
     def test_db_disk_request_with_split(self):

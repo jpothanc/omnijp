@@ -19,25 +19,38 @@ pip install omnijp
 ## Usage
 ### DbDiskCache
 
+You need a quick way to cache database results to disk, then you can use the `DbDiskCache` class.
+
 Here's an example of how to cache database results:
 
 ```python
 from src.dbdisk.db_disk_cache_builder import DbDiskCacheBuilder
-from src.dbdisk.types import DbType, DiskFileType
+from src.common.caches.disk_cache_type import DiskFileType
+from src.common.database.db_type import DbType
 
-CONNECTION_STRING = "your_connection_string"
-
-result = DbDiskCacheBuilder.create(lambda x: (
-    # supported db types are POSTGRESQL, SYBASE and ORACLE
-    x.set_db_type(DbType.POSTGRESQL)
-    # currently only csv is supported
-    .set_disk_file_type(DiskFileType.CSV)
-    .set_cache_path(r"C:\temp\diskCache")
-    .set_cache_name("users")
-    .set_connection_string(CONNECTION_STRING)
-    .set_rows_per_file(1000)
-    .set_can_zip(True)
-)).execute("select * from Users where retired != 1")
+    CONNECTION_STRING = "your_connection_string"
+    try:
+        result = DbDiskCacheBuilder.create(lambda x: (
+            # supported db types are POSTGRESQL, SYBASE and ORACLE
+            x.set_db_type(DbType.POSTGRESQL)
+            .set_connection_string(CONNECTION_STRING)
+            # currently only csv is supported
+            .set_disk_file_type(DiskFileType.CSV)
+            # set the path where the cache files will be saved
+            .set_cache_path(r"C:\temp\diskCache")
+            # set the name of the cache
+            .set_cache_name("users")
+            # set the query to get the data from the database
+            .set_query("select * from equities")
+            # optional parameters, set the number of rows per file and whether to zip the files
+            .set_rows_per_file(1000)
+            .set_can_zip(True)
+        )).execute()
+        print(result.to_json())
+    except Exception as e:
+        print(e)
+    finally:
+        print("Completed")
 ```
 Here's an example of how to cache all database tables:
 ```python
@@ -46,42 +59,66 @@ Here's an example of how to cache all database tables:
             x.set_db_type(DbType.POSTGRESQL)
             .set_disk_file_type(DiskFileType.CSV)
             .set_cache_path(CACHE_DIR)
-            .set_cache_name("users_simple_cache")
             .set_connection_string(connection_string)
             .set_dump_all_tables(True)            
-        )).execute("")
+        )).execute()
+        
         
         result = DbDiskCacheBuilder.create(lambda x: (
             x.set_db_type(DbType.ORACLE)
             .set_disk_file_type(DiskFileType.CSV)
             .set_cache_path(CACHE_DIR)
-            .set_cache_name("users_simple_cache")
             .set_connection_string(connection_string)
             .set_dump_all_tables(True)
             # provide a custom query to get the list of tables
             .set_list_tables_query("SELECT table_name FROM user_tables")
-        )).execute("")
+        )).execute()
 
   
 ```
 Here's an example of how to cache selected tables:
 
 ```python
-    try:
     result = DbDiskCacheBuilder.create(lambda x: (
         x.set_db_type(DbType.POSTGRESQL)
         .set_disk_file_type(DiskFileType.CSV)
         .set_cache_path(CACHE_DIR)
-        .set_cache_name("users_simple_cache")
         .set_connection_string(connection_string)
-        .set_dump_selected_table_list(["equities", "student"])
-    )).execute("")
-    print(result)
-except Exception as e:
-    print(e)
-finally:
-    print("Done")
+        .set_table_list(["equities", "student"])
+    )).execute()
+  
 ```
+### DBRequest
+You need a quick way to make a database request and get the results, then you can use the `DBRequest` class.
+Here's an example of how to use the `DBRequest` class to make a database request:
+
+```python
+    connection_string = os.getenv("LOCAL_CONNECTION_STRING")
+    try:
+        result = DbRequestBuilder.create(lambda x: (
+            x.set_db_type(DbType.POSTGRESQL)
+            .set_connection_string(connection_string)
+            .set_query("select * from equities")
+            # dump selected tables
+            # .set_table_list(["equities", "student"])
+        )).execute()
+        print(result.to_json())
+        
+        for table in result.tables:
+            print(f"\nTable: {table.name}")
+            print("Header:")
+            print(table.header)
+            print("Data:")
+            for row in table.data:
+                print(row)
+        
+    except Exception as e:
+        print(e)
+    finally:
+        print("Completed")  
+```
+
+
 
 
 ### HttpCachedRequest

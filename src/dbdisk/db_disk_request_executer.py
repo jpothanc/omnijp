@@ -32,14 +32,14 @@ class DbDiskRequestExecutor:
             if self.db_disk_request.dump_all_tables:
                 self.logger.info("start dumping all tables")
                 return self.dump_all_tables(db_service, self.db_disk_request.list_tables_query)
-            elif self.db_disk_request.dump_selected_table_list:
-                self.logger.info(f"start dumping selected tables {self.db_disk_request.dump_selected_table_list}")
-                return self.dump_selected_tables(db_service, self.db_disk_request.dump_selected_table_list)
+            elif self.db_disk_request.table_list:
+                self.logger.info(f"start dumping selected tables {self.db_disk_request.table_list}")
+                return self.dump_selected_tables(db_service, self.db_disk_request.table_list)
             else:
-                self.logger.info(f"dumping query: {self.db_disk_request.dump_query}")
+                self.logger.info(f"dumping query: {self.db_disk_request.query}")
                 results = DbDiskResults()
                 results.set_start_time()
-                header, data = db_service.execute(self.db_disk_request.dump_query)
+                header, data = db_service.execute(self.db_disk_request.query)
                 DbDiskFactory.create_db_disk(self.db_disk_request).save(header, data)
                 results.add_table(table_info=TableDumpResult(name="query", row_count=len(data)))
                 results.set_end_time()

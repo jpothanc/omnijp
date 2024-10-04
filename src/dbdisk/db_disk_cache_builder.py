@@ -50,11 +50,11 @@ class DbDiskCacheBuilder(BaseBuilder):
     def set_list_tables_query(self, list_tables_query):
         self.db_disk_request.list_tables_query = list_tables_query
         return self
-    def set_dump_selected_table_list(self, table_list):
-        self.db_disk_request.dump_selected_table_list = table_list
+    def set_table_list(self, table_list):
+        self.db_disk_request.table_list = table_list
         return self
-    def set_dump_query(self, dump_query):
-        self.db_disk_request.dump_query = dump_query
+    def set_query(self, dump_query):
+        self.db_disk_request.query = dump_query
         return self
 
     def execute(self):
