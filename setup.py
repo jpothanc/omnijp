@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='omnijp',
-    version='2.18.0',
+    version='2.19.0',
     packages=find_packages(),
     install_requires=[
         'retry>=0.9.2',
