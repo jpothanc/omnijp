@@ -46,7 +46,6 @@ class DbDiskCacheBuilder(BaseBuilder):
     def set_dump_all_tables(self,dump_all_tables ):
         self.db_disk_request.dump_all_tables = dump_all_tables
         return self
-
     def set_list_tables_query(self, list_tables_query):
         self.db_disk_request.list_tables_query = list_tables_query
         return self
