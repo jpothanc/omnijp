@@ -1,6 +1,6 @@
 import shutil
 from itertools import islice
-
+from datetime import datetime
 
 def split_into_subsets(data, n):
     """
@@ -21,3 +21,9 @@ def zip_directory(directory, zip_name, delete_after_zip=True):
     shutil.make_archive(zip_name, 'zip', directory)
     if delete_after_zip:
         shutil.rmtree(directory)
+
+def getcurrenttime():
+    """
+    Get the current time.
+    """
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")[:-3]

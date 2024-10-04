@@ -1,23 +1,28 @@
+from dataclasses import dataclass
 from src.dbdisk.types import DiskFileType, DbType
 
 MAX_ROWS = 1000000
+
+@dataclass
 class DbDiskRequest:
-    def __init__(self):
-        self.db_type = DbType.NONE
-        self.disk_file_type = DiskFileType.CSV
-        self.cache_path = None
-        self.cache_name = None
-        self.connection_string = None
-        self.db_type = None
-        self.can_zip = False
-        self.rows_per_file = MAX_ROWS
-        self.dump_all_tables = False
-        self.list_tables_query = None
-        self.table_list = []
+    db_type: DbType = DbType.NONE
+    disk_file_type: DiskFileType = DiskFileType.CSV
+    cache_path: str = None
+    cache_name: str = None
+    connection_string: str = None
+    db_type: DbType = None
+    can_zip: bool = False
+    rows_per_file: int = MAX_ROWS
+    dump_all_tables: bool = False
+    list_tables_query: str = None
+    dump_selected_table_list:list  = None
+    dump_query = None
+
     def dump(self):
         print("\nClass Members:")
         for name, value in vars(self).items():
             print(f"{name}: {value}")
 
+    
 
 

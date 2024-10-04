@@ -3,6 +3,9 @@ import json
 import socket
 from datetime import datetime
 
+from src.common.constants import DATETIME_FORMAT
+from src.common.helper import getcurrenttime
+
 @dataclass
 class TableResult:
     name: str
@@ -12,7 +15,6 @@ class TableResult:
     time_taken: str = ""
     
 class DbResult:
-     DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
      def __init__(self):
             self.start_time = None
             self.end_time = None
@@ -22,10 +24,10 @@ class DbResult:
             self.tables:list[TableResult] = []
 
      def set_start_time(self):
-        self.start_time =  datetime.now().strftime(self.DATETIME_FORMAT)[:-3]
+        self.start_time =  getcurrenttime()
 
      def set_end_time(self):
-        self.end_time =  datetime.now().strftime(self.DATETIME_FORMAT)[:-3]
+        self.end_time =  getcurrenttime()
 
      def add_table(self, table_result: TableResult):
         self.tables.append(table_result)

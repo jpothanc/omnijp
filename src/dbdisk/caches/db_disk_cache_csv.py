@@ -20,13 +20,13 @@ class DbDiskCacheCsv(DbDiskCache):
                 self._save_file(header, subset, file_path)
                 total += len(subset)
 
-            self.logger.info(f"Total records saved: {total}")
+            self.logger.info(f"total records saved: {total}")
             if self.can_zip:
                 zip_directory(local_cache_dir, local_cache_dir)
         except Exception as e:
-            self.logger.error(f"Error saving cache: {e}")
+            self.logger.error(f"error saving cache: {e}")
             return False
-        self.logger.info(f"Cache saved to {file_path}")
+        self.logger.debug(f"cache saved to {file_path}")
         return True
 
     def get_local_cache_path(self):
@@ -41,8 +41,6 @@ class DbDiskCacheCsv(DbDiskCache):
                 for row in data:
                     csv_writer.writerow(row)
         except Exception as e:
-            self.logger.error(f"Error saving cache: {e}")
+            self.logger.error(f"error saving file: {e}")
             return False
-        
-        self.logger.info(f"Cache saved to {file_path}")
         return True

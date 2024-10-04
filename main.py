@@ -36,8 +36,9 @@ def db_disk_test():
             .set_list_tables_query("select table_name from information_schema.tables where table_schema = 'public'")
             # .set_table_list(["equities", "student"])
             # .set_can_zip(True)
+            .set_dump_query("select * from equities")
             .set_rows_per_file(10)
-        )).execute("select * from equities")
+        )).execute()
         print(result.to_json())
     except Exception as e:
         logger.exception("An error occurred:", e)
@@ -52,8 +53,9 @@ def db_request_test():
         result = DbRequestBuilder.create(lambda x: (
             x.set_db_type(DbType.POSTGRESQL)
             .set_connection_string(connection_string)
-            # .set_table_list(["equities", "student"])
-        )).execute("select * from equities")
+            .set_table_list(["equities", "student"])
+            .set_query("select * from equities")
+        )).execute()
         print(result.to_json())
         
         for table in result.tables:
@@ -85,10 +87,13 @@ def ftps_pkcs_test():
 
 if __name__ == "__main__":
     load_dotenv()
+    # Set up logging in the application
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
     try:
          # ftps_pkcs_test()
-         db_disk_test()
-         db_request_test()
+          db_disk_test()
+          db_request_test()
     except Exception as e:
 
 

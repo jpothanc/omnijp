@@ -1,8 +1,10 @@
 
 from dataclasses import asdict, dataclass
-from datetime import datetime
 import json
 import socket
+
+from src.common.constants import DATETIME_FORMAT
+from src.common.helper import getcurrenttime
 
 
 @dataclass
@@ -14,21 +16,18 @@ class TableDumpResult:
 
 @dataclass
 class DbDiskResults:
-    DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
-    def __init__(self):
-        self.start_time = None
-        self.end_time = None
-        # self.elapsed_time:str = ""
-        self.host_name:str = socket.gethostname()
-        self.total_tables_dumped: int = 0
-        self.total_rows_dumped: int = 0
-        self.tables:list[TableDumpResult] = []
+    start_time = None
+    end_time = None
+    host_name = socket.gethostname()
+    total_tables_dumped = 0
+    total_rows_dumped = 0
+    tables = []
 
     def set_start_time(self):
-        self.start_time =  datetime.now().strftime(self.DATETIME_FORMAT)[:-3]
+        self.start_time =  getcurrenttime()
 
     def set_end_time(self):
-        self.end_time =  datetime.now().strftime(self.DATETIME_FORMAT)[:-3]
+        self.end_time =  getcurrenttime()
 
     
     def add_table(self, table_info: TableDumpResult):

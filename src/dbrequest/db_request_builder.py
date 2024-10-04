@@ -23,10 +23,12 @@ class DbRequestBuilder:
     def set_table_list(self, table_list):
         self.db_request.table_list = table_list
         return self
-    
-    def execute(self, query)->DbResult:
+    def set_query(self, query):
+        self.db_request.query = query
+        return self
+    def execute(self)->DbResult:
         with DbRequestExecutor(self.db_request) as executor:
-            return executor.execute(query)
+            return executor.execute()
 
     
 

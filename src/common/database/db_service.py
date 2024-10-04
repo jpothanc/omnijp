@@ -16,16 +16,13 @@ class DbService:
         connection = None
         cursor = None
         try:
-            self.logger.info("Executing query: ", query)
-            self.logger.info("Connecting to database...")
+            self.logger.debug("start executing query: %s", query)
             connection = self.connect()
-            self.logger.info("Connected to database")
             cursor = connection.cursor()
-            self.logger.info("Executing query...")
             cursor.execute(query)
             header = [desc[0] for desc in cursor.description]
             result = cursor.fetchall()
-            self.logger.info("Query executed")
+            self.logger.debug("end executing query: %s", query)
         except Exception as e:
             self.handle_error(e)
             result = None

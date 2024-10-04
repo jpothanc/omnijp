@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='omnijp',
-    version='2.16.0',
+    version='2.18.0',
     packages=find_packages(),
     install_requires=[
         'retry>=0.9.2',
@@ -10,7 +10,7 @@ setup(
         'pyodbc>=5.1.0',
         'psycopg2>=2.9.9',
         'openai~=1.30.5',
-        'cx_Oracle~=8.3.0'
+        'cx_Oracle~=8.3.0',
         'pymssql~=2.3.0'
     ],
     entry_points={

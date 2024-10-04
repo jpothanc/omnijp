@@ -21,7 +21,7 @@ class DbDiskRequestExecutor:
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
 
-    def execute(self, query):
+    def execute(self):
         """
         execute the query and dump the result to disk
         :param query:
@@ -32,14 +32,14 @@ class DbDiskRequestExecutor:
             if self.db_disk_request.dump_all_tables:
                 self.logger.info("start dumping all tables")
                 return self.dump_all_tables(db_service, self.db_disk_request.list_tables_query)
-            elif self.db_disk_request.table_list:
-                self.logger.info(f"start dumping selected tables {self.db_disk_request.table_list}")
-                return self.dump_tables(db_service, self.db_disk_request.table_list)
+            elif self.db_disk_request.dump_selected_table_list:
+                self.logger.info(f"start dumping selected tables {self.db_disk_request.dump_selected_table_list}")
+                return self.dump_selected_tables(db_service, self.db_disk_request.dump_selected_table_list)
             else:
-                self.logger.info(f"dumping query: {query}")
+                self.logger.info(f"dumping query: {self.db_disk_request.dump_query}")
                 results = DbDiskResults()
                 results.set_start_time()
-                header, data = db_service.execute(query)
+                header, data = db_service.execute(self.db_disk_request.dump_query)
                 DbDiskFactory.create_db_disk(self.db_disk_request).save(header, data)
                 results.add_table(table_info=TableDumpResult(name="query", row_count=len(data)))
                 results.set_end_time()
@@ -48,14 +48,13 @@ class DbDiskRequestExecutor:
             raise Exception("Error dumping data to disk", e)
 
 
-    def dump_tables(self,db_service, table_list):
+    def dump_selected_tables(self, db_service, table_list):
         """
         dump selected tables
         :param table_list:
         :param db_service:
         :return:
         """
-        self.logger.info("start dumping selected tables")
         max_workers = min(5, os.cpu_count() + 4)  # Adjust based on CPU count and workload
         results = DbDiskResults()
         results.set_start_time()
@@ -83,12 +82,13 @@ class DbDiskRequestExecutor:
         :return:
         """
         table_query = list_tables_query if list_tables_query is not None else db_service.get_all_tables_query()
-        if table_query is "" or table_query is None:
+        if table_query == "" or table_query is None:
             raise Exception("Does not know how to query all tables. Pls provide the query.")
-        self.logger.info(f"get all tables from db: {table_query}")
+
+        self.logger.info(f"Getting all tables from db: {table_query}")
         header, data = db_service.execute(table_query)
         table_list = [x[0] for x in data]
-        return self.dump_tables(db_service, table_list)
+        return self.dump_selected_tables(db_service, table_list)
 
 
     def dump_table(self,table, db_service):
@@ -98,14 +98,14 @@ class DbDiskRequestExecutor:
         :param db_service:
         :return:
         """
-        star_time = time.time()
+        start_time = time.time()
+        self.logger.info(f"dumping table: {table}")
         query = f"select * from {table}"
-        self.logger.info(f"dumping table: {query}")
         header, data =   db_service.execute(query)
         self.db_disk_request.cache_name =table
         self.logger.info(f"creating db disk cache for table: {table}")
-        result =  DbDiskFactory.create_db_disk(self.db_disk_request).save(header, data)
+        DbDiskFactory.create_db_disk(self.db_disk_request).save(header, data)
         end_time = time.time()
-        elapsed_time = round((end_time - star_time) * 1000, 3)  # Round to 3 decimal places
-        table_info = TableDumpResult(name=table, row_count=len(data), time_taken=str(elapsed_time) + " ms")
-        return table_info
+        elapsed_time = round((end_time - start_time) * 1000, 3)  # Round to 3 decimal places
+        result = TableDumpResult(name=table, row_count=len(data), time_taken=str(elapsed_time) + " ms")
+        return result

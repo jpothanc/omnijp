@@ -65,21 +65,22 @@ Here's an example of how to cache all database tables:
   
 ```
 Here's an example of how to cache selected tables:
+
 ```python
     try:
-        result = DbDiskCacheBuilder.create(lambda x: (
-            x.set_db_type(DbType.POSTGRESQL)
-            .set_disk_file_type(DiskFileType.CSV)
-            .set_cache_path(CACHE_DIR)
-            .set_cache_name("users_simple_cache")
-            .set_connection_string(connection_string)
-            .set_table_list(["equities", "student"])
-        )).execute("")
-        print(result)
-    except Exception as e:
-        print(e)
-    finally:
-        print("Done")
+    result = DbDiskCacheBuilder.create(lambda x: (
+        x.set_db_type(DbType.POSTGRESQL)
+        .set_disk_file_type(DiskFileType.CSV)
+        .set_cache_path(CACHE_DIR)
+        .set_cache_name("users_simple_cache")
+        .set_connection_string(connection_string)
+        .set_dump_selected_table_list(["equities", "student"])
+    )).execute("")
+    print(result)
+except Exception as e:
+    print(e)
+finally:
+    print("Done")
 ```
 
 

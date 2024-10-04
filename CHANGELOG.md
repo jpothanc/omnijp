@@ -1,4 +1,11 @@
 # Changelog
+## [2.18.0] - 2024-10-03
+### Added
+-Added simple dbrequest class to handle database requests
+### Fixed
+- Fixed the bug that caused the program throws exception when logger was not initialized at client side
+- Added pymssql dependency
+
 
 ## [2.16.0] - 2024-10-03
 ### Added
