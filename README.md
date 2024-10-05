@@ -26,9 +26,9 @@ Currently, the library supports PostgreSQL, Sybase, and Oracle databases.
 Here's an example of how to cache database results:
 
 ```python
-from src.dbdisk.db_disk_cache_builder import DbDiskCacheBuilder
-from src.common.caches.disk_cache_type import DiskFileType
-from src.common.database.db_type import DbType
+    from src.common.caches.disk_cache_type import DiskFileType
+    from src.common.database.db_type import DbType
+    from src.dbdisk.db_disk_cache_builder import DbDiskCacheBuilder
 
     CONNECTION_STRING = "your_connection_string"
     try:
@@ -100,11 +100,14 @@ Currently, the library supports PostgreSQL, Sybase, and Oracle databases.
 Here's an example of how to use the `DBRequest` class to make a database request:
 
 ```python
-    connection_string = os.getenv("LOCAL_CONNECTION_STRING")
+    from src.common.database.db_type import DbType
+    from src.dbrequest.db_request_builder import DbRequestBuilder    
+    import os
+    CONNECTION_STRING = os.getenv("LOCAL_CONNECTION_STRING")
     try:
         result = DbRequestBuilder.create(lambda x: (
             x.set_db_type(DbType.POSTGRESQL)
-            .set_connection_string(connection_string)
+            .set_connection_string(CONNECTION_STRING)
             
             # single query  
             .set_query("select * from equities")
