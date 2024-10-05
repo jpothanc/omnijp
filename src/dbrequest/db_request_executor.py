@@ -32,12 +32,12 @@ class DbRequestExecutor:
 
             if self.db_request.table_list:
                 self.logger.info(f"start querying selected tables {self.db_request.table_list}")
-                result =  self.query_selected_tables(db_service, self.db_request.table_list)
+                result = self.query_selected_tables(db_service, self.db_request.table_list)
                 json_to_file(result.to_json(), self.db_request.result_output_file)
                 return result
             elif self.db_request.query_list:
                 self.logger.info(f"start querying selected queries {self.db_request.query_list}")
-                result =  self.query_list(db_service, self.db_request.query_list)
+                result = self.query_list(db_service, self.db_request.query_list)
                 json_to_file(result.to_json(), self.db_request.result_output_file)
                 return result
 
@@ -60,7 +60,7 @@ class DbRequestExecutor:
         :param db_service:
         :return:
         """
-        max_workers = min(5, os.cpu_count() + 4)  
+        max_workers = self._thread_workers
         results = DbResult()
         results.set_start_time()
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -77,15 +77,15 @@ class DbRequestExecutor:
 
         results.set_end_time()
         return results
-    
-    def query_list(self, db_service, query_list)->DbResult:
+
+    def query_list(self, db_service, query_list) -> DbResult:
         """
         query selected tables
         :param query_list:
         :param db_service:
         :return DbResult:
         """
-        max_workers = min(5, os.cpu_count() + 4)  # Adjust based on CPU count and workload
+        max_workers = self._thread_workers
         results = DbResult()
         results.set_start_time()
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -103,9 +103,7 @@ class DbRequestExecutor:
         results.set_end_time()
         return results
 
-
-
-    def query_table(self, table, db_service)->TableResult:
+    def query_table(self, table, db_service) -> TableResult:
         """
         query table
         :param table:
@@ -122,7 +120,7 @@ class DbRequestExecutor:
                              time_taken=str(elapsed_time) + " ms")
         return result
 
-    def query_single(self, query, db_service)->TableResult:
+    def query_single(self, query, db_service) -> TableResult:
         """
         query single
         :param query:
@@ -136,3 +134,7 @@ class DbRequestExecutor:
         result = TableResult(name=query, row_count=len(data), header=header, data=data,
                              time_taken=str(elapsed_time) + " ms")
         return result
+
+    @property
+    def _thread_workers(self):
+        return min(5, os.cpu_count() + 4)

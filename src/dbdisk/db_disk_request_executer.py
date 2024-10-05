@@ -34,7 +34,7 @@ class DbDiskRequestExecutor:
         try:
             if self.db_disk_request.dump_all_tables:
                 self.logger.info("start dumping all tables")
-                result =  self.dump_all_tables(db_service, self.db_disk_request.list_tables_query)
+                result = self.dump_all_tables(db_service, self.db_disk_request.list_tables_query)
                 json_to_file(result.to_json(), self.db_disk_request.result_output_file)
                 return result
             elif self.db_disk_request.table_list:
@@ -62,7 +62,7 @@ class DbDiskRequestExecutor:
         :param db_service:
         :return:
         """
-        max_workers = min(5, os.cpu_count() + 4)  # Adjust based on CPU count and workload
+        max_workers = self._thread_workers
         results = DbDiskResult()
         results.set_start_time()
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -115,3 +115,7 @@ class DbDiskRequestExecutor:
         elapsed_time = round((end_time - start_time) * 1000, 3)  # Round to 3 decimal places
         result = TableDumpResult(name=table, row_count=len(data), time_taken=str(elapsed_time) + " ms")
         return result
+
+    @property
+    def _thread_workers(self):
+        return min(5, os.cpu_count() + 4)
