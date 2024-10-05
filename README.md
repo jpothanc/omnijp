@@ -22,7 +22,7 @@ pip install omnijp
 ### DbDiskCache
 
 You need a quick way to cache database results to disk, then you can use the `DbDiskCache` class.
-
+Currently, the library supports PostgreSQL, Sybase, and Oracle databases.
 Here's an example of how to cache database results:
 
 ```python
@@ -47,6 +47,10 @@ from src.common.database.db_type import DbType
             # optional parameters, set the number of rows per file and whether to zip the files
             .set_rows_per_file(1000)
             .set_can_zip(True)
+            # optional parameter, set the output file to save the results
+            # if not set, the results will be printed a file called db_cache_results.txt
+            # file will be created in the cache path 
+            .set_output_file("db_cache_results.txt")
         )).execute()
         print(result.to_json())
     except Exception as e:
@@ -92,6 +96,7 @@ Here's an example of how to cache selected tables:
 ```
 ### DBRequest
 You need a quick way to make a database request and get the results, then you can use the `DBRequest` class.
+Currently, the library supports PostgreSQL, Sybase, and Oracle databases.
 Here's an example of how to use the `DBRequest` class to make a database request:
 
 ```python
@@ -100,9 +105,19 @@ Here's an example of how to use the `DBRequest` class to make a database request
         result = DbRequestBuilder.create(lambda x: (
             x.set_db_type(DbType.POSTGRESQL)
             .set_connection_string(connection_string)
+            
+            # single query  
             .set_query("select * from equities")
-            # dump selected tables
+            
+            # query selected tables
             # .set_table_list(["equities", "student"])
+
+            # query multiple 
+            # .set_query_list(["select * from equities", "select * from student"])
+
+            # provide the full path to the output file
+            # if not set, the results will be printed to temporary directory with name db_request_result.txt 
+            .set_output_file(r"c:\temp\db_results.txt")
         )).execute()
         print(result.to_json())
         

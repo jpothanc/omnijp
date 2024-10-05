@@ -6,10 +6,9 @@ from src.common.caches.disk_cache_type import DiskFileType
 from src.common.database.db_type import DbType
 from src.dbdisk.db_disk_cache_builder import DbDiskCacheBuilder
 from src.dbrequest.db_request_builder import DbRequestBuilder
-from tests.dbdisk.db_disk_request_test import CACHE_DIR
 from src.ftps.ftps_request_builder import FtpsRequestBuilder
 
-
+CACHE_DIR = r"C:\temp\diskCache"
 def create_logger(logger_name):
     logger = logging.getLogger(logger_name)
     logger.setLevel(logging.DEBUG)
@@ -39,7 +38,7 @@ def db_disk_test():
             .set_cache_name("users_simple_cache")
             .set_query("select * from equities")
             .set_rows_per_file(10)
-            .set_output_file("db_disk_postgres.txt")
+            .set_output_file("db_disk_postgres_all.txt")
         )).execute()
         print(result.to_json())
     except Exception as e:
@@ -97,7 +96,7 @@ if __name__ == "__main__":
     try:
           # ftps_pkcs_test()
            db_disk_test()
-           db_request_test()
+           # db_request_test()
     except Exception as e:
 
 

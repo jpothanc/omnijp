@@ -44,13 +44,14 @@ class DbDiskRequestExecutor:
                 return result
             else:
                 self.logger.info(f"dumping query: {self.db_disk_request.query}")
-                results = DbDiskResult()
-                results.set_start_time()
+                result = DbDiskResult()
+                result.set_start_time()
                 header, data = db_service.execute(self.db_disk_request.query)
                 DbDiskFactory.create_db_disk(self.db_disk_request).save(header, data)
-                results.add_table(table_info=TableDumpResult(name="query", row_count=len(data)))
-                results.set_end_time()
-                return results
+                result.add_table(table_info=TableDumpResult(name="query", row_count=len(data)))
+                result.set_end_time()
+                json_to_file(result.to_json(), self.db_disk_request.result_output_file)
+                return result
         except Exception as e:
             raise Exception("Error dumping data to disk", e)
 

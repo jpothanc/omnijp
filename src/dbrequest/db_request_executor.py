@@ -33,18 +33,22 @@ class DbRequestExecutor:
             if self.db_request.table_list:
                 self.logger.info(f"start querying selected tables {self.db_request.table_list}")
                 result =  self.query_selected_tables(db_service, self.db_request.table_list)
-                json_to_file(result.to_json(), self.db_request.output_file)
+                json_to_file(result.to_json(), self.db_request.result_output_file)
                 return result
             elif self.db_request.query_list:
                 self.logger.info(f"start querying selected queries {self.db_request.query_list}")
                 result =  self.query_list(db_service, self.db_request.query_list)
-                json_to_file(result.to_json(), self.db_request.output_file)
+                json_to_file(result.to_json(), self.db_request.result_output_file)
                 return result
 
             else:
                 self.logger.info(f"start single query: {self.db_request.query}")
-                result = self.query_single(db_service)
-                json_to_file(result.to_json(), self.db_request.output_file)
+                result = DbResult()
+                result.set_start_time()
+                table_result = self.query_single(self.db_request.query, db_service)
+                result.add_table(table_result)
+                result.set_end_time()
+                json_to_file(result.to_json(), self.db_request.result_output_file)
                 return result
         except Exception as e:
             raise Exception("Error querying db", e)
@@ -66,8 +70,8 @@ class DbRequestExecutor:
             for future in concurrent.futures.as_completed(dump_table_tasks):
                 table = dump_table_tasks[future]
                 try:
-                    table_info = future.result()
-                    results.add_table(table_info)
+                    TableResult = future.result()
+                    results.add_table(TableResult)
                 except Exception as exc:
                     self.logger.error(f"Table {table} generated an exception: {exc}")
 
@@ -91,8 +95,8 @@ class DbRequestExecutor:
             for future in concurrent.futures.as_completed(dump_table_tasks):
                 table = dump_table_tasks[future]
                 try:
-                    table_info = future.result()
-                    results.add_table(table_info)
+                    TableResult = future.result()
+                    results.add_table(TableResult)
                 except Exception as exc:
                     self.logger.error(f"Table {table} generated an exception: {exc}")
 
@@ -118,7 +122,7 @@ class DbRequestExecutor:
                              time_taken=str(elapsed_time) + " ms")
         return result
 
-    def query_single(self, query, db_service)->DbResult:
+    def query_single(self, query, db_service)->TableResult:
         """
         query single
         :param query:

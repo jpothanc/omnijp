@@ -22,11 +22,12 @@ class DbDiskRequest:
     list_tables_query: str = None
     table_list: list = None
     query = None
-    output_file = DB_DISK_RESULT_FILE
+    output_file = None
 
     @property
     def result_output_file(self):
-        return os.path.join(self.cache_path, self.output_file)
+        output_file = self.output_file if self.output_file else DB_DISK_RESULT_FILE
+        return os.path.join(self.cache_path, output_file)
 
     def dump(self):
         print("\nClass Members:")

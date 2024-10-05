@@ -4,11 +4,14 @@ import unittest
 
 from dotenv import load_dotenv
 
+from src.common.constants import DB_DISK_RESULT_FILE
 from src.common.database.db_type import DbType
 from src.dbdisk.db_disk_cache_builder import DbDiskCacheBuilder
 from src.common.caches.disk_cache_type import DiskFileType
 
-CACHE_DIR = r"C:\temp\diskCache"
+CACHE_DIR = r"C:\temp\diskCacheTest"
+OUTPUT_FILE = r"db_disk_custom.txt"
+
 class TestDbDiskRequest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -21,10 +24,18 @@ class TestDbDiskRequest(unittest.TestCase):
         pass
 
     def setUp(self):
-        # shutil.rmtree(CACHE_DIR)
-        print(f"Deleted cache directory: {CACHE_DIR}")
+        if os.path.exists(CACHE_DIR):
+            shutil.rmtree(CACHE_DIR)
     def tearDown(self):
         pass
+
+    def validate_result(self, result):
+        self.assertTrue(result.total_rows_dumped > 0)
+        self.assertTrue(result.total_tables_dumped > 0)
+        self.assertTrue(result.host_name is not None)
+        self.assertTrue(result.start_time is not None)
+        self.assertTrue(result.end_time is not None)
+
     def test_db_disk_request(self):
         result = DbDiskCacheBuilder.create(lambda x: (
             x.set_db_type(DbType.POSTGRESQL)
@@ -32,12 +43,38 @@ class TestDbDiskRequest(unittest.TestCase):
             .set_cache_path(CACHE_DIR)
             .set_cache_name("users_simple_cache")
             .set_connection_string(self.connection_string)
-        )).execute("select * from equities")
+            .set_query("select * from equities")
+            .set_output_file(OUTPUT_FILE)
+        )).execute()
 
         cache_file_exists = os.path.exists(os.path.join(CACHE_DIR, "users_simple_cache.csv"))
         self.assertEqual(cache_file_exists, True)
-        self.assertEqual(result.total_rows_dumped > 0, True)
-        self.assertEqual(result.total_tables_dumped > 0, True)
+        output_file_exists = os.path.exists(os.path.join(CACHE_DIR, OUTPUT_FILE))
+        self.assertEqual(output_file_exists, True)
+        self.validate_result(result)
+    def test_creation_output_file_if_not_explicitly_provided(self):
+        result = DbDiskCacheBuilder.create(lambda x: (
+            x.set_db_type(DbType.POSTGRESQL)
+            .set_disk_file_type(DiskFileType.CSV)
+            .set_cache_path(CACHE_DIR)
+            .set_cache_name("users_simple_cache")
+            .set_connection_string(self.connection_string)
+            .set_query("select * from equities")
+        )).execute()
+
+        output_file_exists = os.path.exists(os.path.join(CACHE_DIR, DB_DISK_RESULT_FILE))
+        self.assertEqual(output_file_exists, True)
+        self.validate_result(result)
+
+    def test_db_results_single_table_request_fails(self):
+        with self.assertRaises(Exception) as context:
+            DbDiskCacheBuilder.create(lambda x: (
+                x.set_db_type(DbType.POSTGRESQL)
+                .set_connection_string(self.connection_string)
+                .set_output_file(OUTPUT_FILE)
+            )).execute()
+
+        self.assertTrue(context.exception is not None)
 
     def test_db_disk_request_dump_all_tables(self):
         result = DbDiskCacheBuilder.create(lambda x: (
@@ -46,14 +83,16 @@ class TestDbDiskRequest(unittest.TestCase):
             .set_cache_path(CACHE_DIR)
             .set_dump_all_tables(True)
             .set_connection_string(self.connection_string)
-        )).execute("")
+            .set_output_file(OUTPUT_FILE)
+        )).execute()
 
-        cache_file_exists = os.path.exists(os.path.join(CACHE_DIR, "users_simple_cache.csv"))
+        cache_file_exists = os.path.exists(os.path.join(CACHE_DIR, "equities.csv"))
         self.assertEqual(cache_file_exists, True)
-        self.assertEqual(result.total_rows_dumped > 0, True)
-        self.assertEqual(result.total_tables_dumped > 1, True)
-        self.assertEqual(len(result.table_list) > 1, True)
-       
+        output_file_exists = os.path.exists(os.path.join(CACHE_DIR, OUTPUT_FILE))
+        self.assertEqual(output_file_exists, True)
+
+        self.validate_result(result)
+
 
     def test_db_disk_request_dump_table_list(self):
         result = DbDiskCacheBuilder.create(lambda x: (
@@ -62,13 +101,12 @@ class TestDbDiskRequest(unittest.TestCase):
             .set_cache_path(CACHE_DIR)
             .set_table_list(["equities", "student"])
             .set_connection_string(self.connection_string)
-        )).execute("")
+        )).execute()
 
-        cache_file_exists = os.path.exists(os.path.join(CACHE_DIR, "users_simple_cache.csv"))
-        self.assertEqual(cache_file_exists, True)
-        self.assertEqual(result.total_rows_dumped > 0, True)
-        self.assertEqual(result.total_tables_dumped > 1, True)
-        self.assertEqual(len(result.table_list) > 1, True)
+        valid_cache_files = os.path.exists(os.path.join(CACHE_DIR, "equities.csv")) and os.path.exists(os.path.join(CACHE_DIR, "student.csv"))
+        self.assertEqual(valid_cache_files, True)
+        self.validate_result(result)
+        self.assertEqual(result.total_tables_dumped, 2)
        
 
     def test_db_disk_request_with_split(self):
@@ -78,15 +116,12 @@ class TestDbDiskRequest(unittest.TestCase):
             .set_cache_name("users_split_cache")
             .set_connection_string(self.connection_string)
             .set_rows_per_file(2)
-        )).execute("select * from equities")
+            .set_query("select * from equities")
+        )).execute()
 
-        cache_file_exists = os.path.exists(os.path.join(CACHE_DIR, "users_split_cache_1.csv"))
+        cache_file_exists = os.path.exists(os.path.join(CACHE_DIR, "users_split_cache_1.csv")) and os.path.exists(os.path.join(CACHE_DIR, "users_split_cache_2.csv"))
         self.assertEqual(cache_file_exists, True)
-        cache_file_exists = os.path.exists(os.path.join(CACHE_DIR, "users_split_cache_2.csv"))
-        self.assertEqual(cache_file_exists, True)
-
-        self.assertEqual(result.total_rows_dumped > 0, True)
-        self.assertEqual(result.total_tables_dumped > 0, True)
+        self.validate_result(result)
 
     def test_db_disk_request_with_split_and_zip(self):
         result = DbDiskCacheBuilder.create(lambda x: (
@@ -96,9 +131,9 @@ class TestDbDiskRequest(unittest.TestCase):
                             .set_connection_string(self.connection_string)
                             .set_rows_per_file(2)
                             .set_can_zip(True)
-                            )).execute("select * from equities")
+                            .set_query("select * from equities")
+                            )).execute()
 
         cache_file_exists = os.path.exists(os.path.join(CACHE_DIR, "users_zipped.zip"))
         self.assertEqual(cache_file_exists, True)
-        self.assertEqual(result.total_rows_dumped > 0, True)
-        self.assertEqual(result.total_tables_dumped > 0, True)
+        self.validate_result(result)

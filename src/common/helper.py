@@ -35,6 +35,6 @@ def json_to_file(json_data, file_path):
     """
     directory = os.path.dirname(file_path)
     if not os.path.exists(directory):
-        os.makedirs
+        os.makedirs(directory)
     with open(file_path, 'w') as file:
         file.write(json_data)
