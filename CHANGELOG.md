@@ -1,5 +1,12 @@
 # Changelog
-## [2.10.0] - 2024-10-03
+
+## [2.22.0] - 2024-10-03
+### Added
+-Added support to query and dump multiple sql queries
+### Fixed
+- Fixed bugs 
+
+## [2.20.0] - 2024-10-03
 ### Added
 -Added simple dbrequest class to handle database requests
 ### Fixed
