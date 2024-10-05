@@ -1,3 +1,4 @@
+import os
 import shutil
 from itertools import islice
 from datetime import datetime
@@ -27,3 +28,13 @@ def getcurrenttime():
     Get the current time.
     """
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")[:-3]
+
+def json_to_file(json_data, file_path):
+    """
+    Write the json data to a file.
+    """
+    directory = os.path.dirname(file_path)
+    if not os.path.exists(directory):
+        os.makedirs
+    with open(file_path, 'w') as file:
+        file.write(json_data)

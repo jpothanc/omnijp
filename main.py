@@ -39,6 +39,7 @@ def db_disk_test():
             .set_cache_name("users_simple_cache")
             .set_query("select * from equities")
             .set_rows_per_file(10)
+            .set_output_file("db_disk_postgres.txt")
         )).execute()
         print(result.to_json())
     except Exception as e:
@@ -54,8 +55,10 @@ def db_request_test():
         result = DbRequestBuilder.create(lambda x: (
             x.set_db_type(DbType.POSTGRESQL)
             .set_connection_string(connection_string)
-            .set_table_list(["equities", "student"])
-            .set_query("select * from equities")
+            # .set_table_list(["equities", "student"])
+            # .set_query("select * from equities")
+            .set_query_list(["select count(*) from equities", "select count(*) from student"])
+            .set_output_file(r"c:\temp\disk_postgres.txt")
         )).execute()
         print(result.to_json())
         
@@ -92,9 +95,9 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
     try:
-          ftps_pkcs_test()
-          # db_disk_test()
-          # db_request_test()
+          # ftps_pkcs_test()
+           db_disk_test()
+           db_request_test()
     except Exception as e:
 
 

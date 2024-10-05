@@ -5,9 +5,10 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 
 from src.common.database.db_service_factory import DbServiceFactory
+from src.common.helper import json_to_file
 from src.dbdisk.db_disk_factory import DbDiskFactory
 from src.dbdisk.db_disk_request import DbDiskRequest
-from src.dbdisk.db_disk_results import DbDiskResults, TableDumpResult
+from src.dbdisk.db_disk_result import DbDiskResult, TableDumpResult
 
 
 class DbDiskRequestExecutor:
@@ -33,13 +34,17 @@ class DbDiskRequestExecutor:
         try:
             if self.db_disk_request.dump_all_tables:
                 self.logger.info("start dumping all tables")
-                return self.dump_all_tables(db_service, self.db_disk_request.list_tables_query)
+                result =  self.dump_all_tables(db_service, self.db_disk_request.list_tables_query)
+                json_to_file(result.to_json(), self.db_disk_request.result_output_file)
+                return result
             elif self.db_disk_request.table_list:
                 self.logger.info(f"start dumping selected tables {self.db_disk_request.table_list}")
-                return self.dump_selected_tables(db_service, self.db_disk_request.table_list)
+                result = self.dump_selected_tables(db_service, self.db_disk_request.table_list)
+                json_to_file(result.to_json(), self.db_disk_request.result_output_file)
+                return result
             else:
                 self.logger.info(f"dumping query: {self.db_disk_request.query}")
-                results = DbDiskResults()
+                results = DbDiskResult()
                 results.set_start_time()
                 header, data = db_service.execute(self.db_disk_request.query)
                 DbDiskFactory.create_db_disk(self.db_disk_request).save(header, data)
@@ -57,7 +62,7 @@ class DbDiskRequestExecutor:
         :return:
         """
         max_workers = min(5, os.cpu_count() + 4)  # Adjust based on CPU count and workload
-        results = DbDiskResults()
+        results = DbDiskResult()
         results.set_start_time()
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
             dump_table_tasks = {executor.submit(self.dump_table, table, db_service): table for table in table_list}

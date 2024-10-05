@@ -1,7 +1,7 @@
 from src.common.database.db_type import DbType
 from src.dbrequest.db_request import DbRequest
 from src.dbrequest.db_request_executor import DbRequestExecutor
-from src.dbrequest.db_results import DbResult
+from src.dbrequest.db_result import DbResult
 
 
 class DbRequestBuilder:
@@ -25,9 +25,17 @@ class DbRequestBuilder:
     def set_table_list(self, table_list):
         self.db_request.table_list = table_list
         return self
+    
+    def set_query_list(self, query_list):
+        self.db_request.query_list = query_list
+        return self
 
     def set_query(self, query):
         self.db_request.query = query
+        return self
+
+    def set_output_file(self, output_file):
+        self.db_request.output_file = output_file
         return self
 
     def execute(self) -> DbResult:

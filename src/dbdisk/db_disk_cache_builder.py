@@ -58,7 +58,9 @@ class DbDiskCacheBuilder(BaseBuilder):
     def set_query(self, dump_query):
         self.db_disk_request.query = dump_query
         return self
-
+    def set_output_file(self, output_file):
+        self.db_disk_request.output_file = output_file
+        return self
     def execute(self):
         self.db_disk_request.dump()
         with DbDiskRequestExecutor(self.db_disk_request) as executor:

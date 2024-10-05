@@ -1,6 +1,6 @@
 import json
 import socket
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass, field
 
 from src.common.helper import getcurrenttime
 
@@ -9,9 +9,25 @@ from src.common.helper import getcurrenttime
 class TableResult:
     name: str
     row_count: int
-    header: list
-    data: list
+    #ignore header and data when converting to dict
+    header: list = field(default_factory=list)
+    data: list = field(default_factory=list)
     time_taken: str = ""
+
+    # def to_dict(self):
+    #     return asdict(self, dict_factory=lambda x: {k: v for (k, v) in x if k not in ['header', 'data']})
+    
+    def to_dict(self):
+        # Convert the dataclass to a dictionary
+        full_dict = asdict(self)
+        
+        # Create a new dictionary excluding 'header' and 'data'
+        filtered_dict = {}
+        for key, value in full_dict.items():
+            if key not in ['header', 'data']:
+                filtered_dict[key] = value
+        
+        return filtered_dict
 
 
 class DbResult:
@@ -40,7 +56,8 @@ class DbResult:
             "end_time": self.end_time,
             "host_name": self.host_name,
             "total_tables": self.total_tables,
-            "total_rows": self.total_rows
+            "total_rows": self.total_rows,
+            "tables": [table.to_dict() for table in self.tables]
         }
 
     def to_json(self, indent=2):

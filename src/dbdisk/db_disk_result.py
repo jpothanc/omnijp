@@ -15,7 +15,7 @@ class TableDumpResult:
 
 
 @dataclass
-class DbDiskResults:
+class DbDiskResult:
     start_time = None
     end_time = None
     host_name = socket.gethostname()

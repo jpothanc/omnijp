@@ -5,8 +5,9 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 
 from src.common.database.db_service_factory import DbServiceFactory
+from src.common.helper import json_to_file
 from src.dbrequest.db_request import DbRequest
-from src.dbrequest.db_results import TableResult, DbResult
+from src.dbrequest.db_result import TableResult, DbResult
 
 
 class DbRequestExecutor:
@@ -30,28 +31,32 @@ class DbRequestExecutor:
         try:
 
             if self.db_request.table_list:
-                self.logger.info(f"start dumping selected tables {self.db_request.table_list}")
-                return self.query_selected_tables(db_service, self.db_request.table_list)
+                self.logger.info(f"start querying selected tables {self.db_request.table_list}")
+                result =  self.query_selected_tables(db_service, self.db_request.table_list)
+                json_to_file(result.to_json(), self.db_request.output_file)
+                return result
+            elif self.db_request.query_list:
+                self.logger.info(f"start querying selected queries {self.db_request.query_list}")
+                result =  self.query_list(db_service, self.db_request.query_list)
+                json_to_file(result.to_json(), self.db_request.output_file)
+                return result
+
             else:
-                self.logger.info(f"dumping query: {self.db_request.query}")
-                result = DbResult()
-                result.set_start_time()
-                header, data = db_service.execute(self.db_request.query)
-                table_result = TableResult(name="query", row_count=len(data), header=header, data=data)
-                result.add_table(table_result)
-                result.set_end_time()
+                self.logger.info(f"start single query: {self.db_request.query}")
+                result = self.query_single(db_service)
+                json_to_file(result.to_json(), self.db_request.output_file)
                 return result
         except Exception as e:
             raise Exception("Error querying db", e)
 
     def query_selected_tables(self, db_service, table_list):
         """
-        dump selected tables
+        query selected tables
         :param table_list:
         :param db_service:
         :return:
         """
-        max_workers = min(5, os.cpu_count() + 4)  # Adjust based on CPU count and workload
+        max_workers = min(5, os.cpu_count() + 4)  
         results = DbResult()
         results.set_start_time()
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -68,19 +73,62 @@ class DbRequestExecutor:
 
         results.set_end_time()
         return results
-
-    def query_table(self, table, db_service):
+    
+    def query_list(self, db_service, query_list)->DbResult:
         """
-        dump table to disk
+        query selected tables
+        :param query_list:
+        :param db_service:
+        :return DbResult:
+        """
+        max_workers = min(5, os.cpu_count() + 4)  # Adjust based on CPU count and workload
+        results = DbResult()
+        results.set_start_time()
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            dump_table_tasks = {executor.submit(self.query_single, query, db_service): query for query in query_list}
+
+            # Wait for all tasks to complete
+            for future in concurrent.futures.as_completed(dump_table_tasks):
+                table = dump_table_tasks[future]
+                try:
+                    table_info = future.result()
+                    results.add_table(table_info)
+                except Exception as exc:
+                    self.logger.error(f"Table {table} generated an exception: {exc}")
+
+        results.set_end_time()
+        return results
+
+
+
+    def query_table(self, table, db_service)->TableResult:
+        """
+        query table
         :param table:
+        :param db_service:
+        :return TableResult:
+        """
+        start_time = time.time()
+        query = f"select * from {table}"
+        self.logger.info(f"dumping table: {table}")
+        header, data = db_service.execute(query)
+        end_time = time.time()
+        elapsed_time = round((end_time - start_time) * 1000, 3)  # Round to 3 decimal places
+        result = TableResult(name=table, row_count=len(data), header=header, data=data,
+                             time_taken=str(elapsed_time) + " ms")
+        return result
+
+    def query_single(self, query, db_service)->DbResult:
+        """
+        query single
+        :param query:
         :param db_service:
         :return:
         """
         start_time = time.time()
-        self.logger.info(f"dumping table: {table}")
-        header, data = db_service.execute(self.db_request.query)
+        header, data = db_service.execute(query)
         end_time = time.time()
         elapsed_time = round((end_time - start_time) * 1000, 3)  # Round to 3 decimal places
-        result = TableResult(name=table, row_count=len(data), header=header, data=data,
+        result = TableResult(name=query, row_count=len(data), header=header, data=data,
                              time_taken=str(elapsed_time) + " ms")
         return result

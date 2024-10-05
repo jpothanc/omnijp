@@ -1,6 +1,8 @@
+import os
 from dataclasses import dataclass
 
 from src.common.caches.disk_cache_type import DiskFileType
+from src.common.constants import DB_DISK_RESULT_FILE
 from src.common.database.db_type import DbType
 
 MAX_ROWS = 1000000
@@ -20,6 +22,11 @@ class DbDiskRequest:
     list_tables_query: str = None
     table_list: list = None
     query = None
+    output_file = DB_DISK_RESULT_FILE
+
+    @property
+    def result_output_file(self):
+        return os.path.join(self.cache_path, self.output_file)
 
     def dump(self):
         print("\nClass Members:")
