@@ -138,3 +138,13 @@ class DbRequestExecutor:
     @property
     def _thread_workers(self):
         return min(5, os.cpu_count() + 4)
+
+    def execute_chunk(self, query, db_service, chunk_size):
+        """
+        execute the query in chunks
+        :param query:
+        :param db_service:
+        :param chunk_size:
+        :return:
+        """
+        pass

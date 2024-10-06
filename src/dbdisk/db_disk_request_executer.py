@@ -1,3 +1,4 @@
+import asyncio
 import concurrent.futures
 import logging
 import os
@@ -23,7 +24,7 @@ class DbDiskRequestExecutor:
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
 
-    def execute(self):
+    def execute(self) -> DbDiskResult:
         """
         execute the query and dump the result to disk
         :param query:
@@ -44,18 +45,26 @@ class DbDiskRequestExecutor:
                 return result
             else:
                 self.logger.info(f"dumping query: {self.db_disk_request.query}")
-                result = DbDiskResult()
-                result.set_start_time()
-                header, data = db_service.execute(self.db_disk_request.query)
-                DbDiskFactory.create_db_disk(self.db_disk_request).save(header, data)
-                result.add_table(table_info=TableDumpResult(name="query", row_count=len(data)))
-                result.set_end_time()
+                result = asyncio.run(self.dump_single_query(db_service))
                 json_to_file(result.to_json(), self.db_disk_request.result_output_file)
                 return result
         except Exception as e:
             raise Exception("Error dumping data to disk", e)
 
-    def dump_selected_tables(self, db_service, table_list):
+    async def dump_single_query(self, db_service) -> DbDiskResult:
+        result = await asyncio.get_event_loop().run_in_executor(None, self._dump_single_query, db_service)
+        return result
+
+    def _dump_single_query(self, db_service) -> DbDiskResult:
+        result = DbDiskResult()
+        result.set_start_time()
+        header, data = db_service.execute(self.db_disk_request.query)
+        DbDiskFactory.create_db_disk(self.db_disk_request).save(header, data)
+        result.add_table(table_info=TableDumpResult(name="query", row_count=len(data)))
+        result.set_end_time()
+        return result
+
+    def dump_selected_tables(self, db_service, table_list) -> DbDiskResult:
         """
         dump selected tables
         :param table_list:
@@ -80,7 +89,7 @@ class DbDiskRequestExecutor:
         results.set_end_time()
         return results
 
-    def dump_all_tables(self, db_service, list_tables_query):
+    def dump_all_tables(self, db_service, list_tables_query) -> DbDiskResult:
         """
         dump all tables
         possible to provide a custom query to get all tables or use the default query
@@ -97,7 +106,7 @@ class DbDiskRequestExecutor:
         table_list = [x[0] for x in data]
         return self.dump_selected_tables(db_service, table_list)
 
-    def dump_table(self, table, db_service):
+    def dump_table(self, table, db_service) -> TableDumpResult:
         """
         dump table to disk
         :param table:

@@ -1,6 +1,7 @@
 from src.common.base_builder import BaseBuilder
 from src.common.caches.disk_cache_type import DiskFileType
 from src.common.database.db_type import DbType
+from src.dbdisk.db_disk_bulk_executor import DbBulkDiskRequestExecutor
 from src.dbdisk.db_disk_request import DbDiskRequest
 from src.dbdisk.db_disk_request_executer import DbDiskRequestExecutor
 
@@ -61,7 +62,17 @@ class DbDiskCacheBuilder(BaseBuilder):
     def set_output_file(self, output_file):
         self.db_disk_request.output_file = output_file
         return self
+    def set_bulk(self, bulk):
+        self.db_disk_request.bulk = bulk
+        return self
     def execute(self):
         self.db_disk_request.dump()
-        with DbDiskRequestExecutor(self.db_disk_request) as executor:
-            return executor.execute()
+
+        if self.db_disk_request.bulk:
+            with DbBulkDiskRequestExecutor(self.db_disk_request) as executor:
+                return executor.execute()
+        else:
+            with DbDiskRequestExecutor(self.db_disk_request) as executor:
+                return executor.execute()
+
+

@@ -1,6 +1,11 @@
 # Changelog
+## [2.24.0] - 2024-10-06
+### Added
+-Added support to dump bulk data from big tables
 
-## [2.22.0] - 2024-10-03
+ 
+
+## [2.22.0] - 2024-10-05
 ### Added
 -Added support to query and dump multiple sql queries
 ### Fixed

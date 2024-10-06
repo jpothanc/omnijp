@@ -23,6 +23,7 @@ class DbDiskRequest:
     table_list: list = None
     query = None
     output_file = None
+    bulk: bool = False
 
     @property
     def result_output_file(self):

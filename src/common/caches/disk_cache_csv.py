@@ -1,11 +1,25 @@
 import csv
 import os
 
+import pandas as pd
+
 from src.common.caches.disk_cache import DiskCache
 from src.common.helper import split_into_subsets, zip_directory
 
 
 class DiskCacheCsv(DiskCache):
+
+    def save_bulk(self, header, data):
+        try:
+            df = pd.DataFrame(data, columns=header)
+            os.makedirs(self.cache_dir, exist_ok=True)
+            file_name = f"{self.cache_name}.zip" if self.can_zip else f"{self.cache_name}.csv"
+            file_path = os.path.join(self.cache_dir, file_name)
+            df.to_csv(file_path, index=False, compression="zip" if self.can_zip else None)
+        except Exception as e:
+            self.logger.error(f"error saving cache: {e}")
+            return False
+        self.logger.debug(f"cache saved to {file_path}")
 
     def save(self, header, data):
         try:

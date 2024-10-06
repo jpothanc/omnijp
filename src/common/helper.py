@@ -38,3 +38,8 @@ def json_to_file(json_data, file_path):
         os.makedirs(directory)
     with open(file_path, 'w') as file:
         file.write(json_data)
+def generate_query_id(query):
+    """
+    Generate a unique id for the query.
+    """
+    return hash(query) % ((1 << 31) - 1)
