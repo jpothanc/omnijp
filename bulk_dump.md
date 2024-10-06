@@ -91,3 +91,63 @@ if __name__ == "__main__":
 
 
 ```
+```python
+import psycopg2
+
+# PostgreSQL connection setup
+conn = psycopg2.connect(
+    dbname="your_db",
+    user="your_user",
+    password="your_password",
+    host="your_host",
+    port="your_port"
+)
+
+# Query to extract table schema
+query = """
+    SELECT column_name, data_type, is_nullable, column_default
+    FROM information_schema.columns
+    WHERE table_name = %s
+    ORDER BY ordinal_position;
+"""
+
+table_name = 'your_table_name'
+
+# Mapping PostgreSQL data types to Sybase IQ data types
+type_mapping = {
+    'integer': 'INT',
+    'bigint': 'BIGINT',
+    'smallint': 'SMALLINT',
+    'boolean': 'BIT',
+    'char': 'CHAR',
+    'varchar': 'VARCHAR',
+    'text': 'LONG VARCHAR',
+    'date': 'DATE',
+    'timestamp': 'TIMESTAMP',
+    'numeric': 'NUMERIC',
+    'float': 'DOUBLE'
+}
+
+# Fetch table schema
+with conn.cursor() as cur:
+    cur.execute(query, (table_name,))
+    schema = cur.fetchall()
+
+# Generate Sybase IQ CREATE TABLE statement
+create_table_stmt = f"CREATE TABLE {table_name} (\n"
+columns = []
+
+for column_name, data_type, is_nullable, column_default in schema:
+    sybase_data_type = type_mapping.get(data_type, data_type)
+    nullability = '' if is_nullable == 'NO' else 'NULL'
+    default = f"DEFAULT {column_default}" if column_default else ''
+    columns.append(f"    {column_name} {sybase_data_type} {nullability} {default}")
+
+create_table_stmt += ",\n".join(columns)
+create_table_stmt += "\n);"
+
+# Output the statement
+print(create_table_stmt)
+
+
+```

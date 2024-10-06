@@ -30,6 +30,9 @@ Here's an example of how to cache database results:
     from src.common.database.db_type import DbType
     from src.dbdisk.db_disk_cache_builder import DbDiskCacheBuilder
 
+    # set up logging, it will help you show what is happening inside the library
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    
     CONNECTION_STRING = "your_connection_string"
     try:
         result = DbDiskCacheBuilder.create(lambda x: (
