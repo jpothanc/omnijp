@@ -9,11 +9,12 @@ from src.common.helper import split_into_subsets, zip_directory
 
 class DiskCacheCsv(DiskCache):
 
-    def save_bulk(self, header, data):
+    def save_bulk(self, header, data, cache_name=None):
         try:
             df = pd.DataFrame(data, columns=header)
             os.makedirs(self.cache_dir, exist_ok=True)
-            file_name = f"{self.cache_name}.zip" if self.can_zip else f"{self.cache_name}.csv"
+            cache_name = cache_name if cache_name else self.cache_name
+            file_name = f"{cache_name}.zip" if self.can_zip else f"{cache_name}.csv"
             file_path = os.path.join(self.cache_dir, file_name)
             df.to_csv(file_path, index=False, compression="zip" if self.can_zip else None)
         except Exception as e:

@@ -6,19 +6,12 @@ from src.common.helper import json_to_file
 from src.dbdisk.db_disk_factory import DbDiskFactory
 from src.dbdisk.db_disk_request import DbDiskRequest
 from src.dbdisk.db_disk_result import DbDiskResult
+from src.dbdisk.executors.db_disk_executor import DbDiskExecutor
 
 
-class DbBulkDiskRequestExecutor:
+class DbBulkDiskRequestExecutor(DbDiskExecutor):
     def __init__(self, db_disk_request: DbDiskRequest):
-        self.db_disk_request = db_disk_request
-        self.logger = logging.getLogger(__name__)
-        self.logger.addHandler(logging.NullHandler())
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
+        super().__init__(db_disk_request)
 
     def execute(self) -> DbDiskResult:
         """
@@ -45,10 +38,11 @@ class DbBulkDiskRequestExecutor:
         header = next(result_generator)
         result = DbDiskResult()
         result.set_start_time()
+        cache_name = self.db_disk_request.cache_name
         for i, rows in enumerate(result_generator, start=1):
             logging.info(f"dumping chunk {i}")
             db_request = self.db_disk_request
-            db_request.cache_name = f"{db_request.cache_name}{i:02d}"
+            db_request.cache_name = f"{cache_name}{i:02d}"
             DbDiskFactory.create_db_disk(db_request).save_bulk(header, rows)
             result.total_rows_dumped += len(rows)
             result.total_chunks_dumped += 1

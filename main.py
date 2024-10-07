@@ -7,6 +7,7 @@ from src.common.caches.disk_cache_type import DiskFileType
 from src.common.database.db_service_factory import DbServiceFactory
 from src.common.database.db_type import DbType
 from src.dbdisk.db_disk_cache_builder import DbDiskCacheBuilder
+from src.dbdisk.dbdisk_executor_type import DbDiskExecutor
 from src.dbrequest.db_request_builder import DbRequestBuilder
 from src.ftps.ftps_request_builder import FtpsRequestBuilder
 
@@ -100,9 +101,9 @@ def db_chunk_test():
             .set_query("select * from student")
             .set_can_zip(True)
             .set_cache_name("student")
-            .set_rows_per_file(100)
+            .set_rows_per_file(10)
             .set_output_file("db_disk_postgres_all.txt")
-            .set_bulk(True)
+            .set_executor_type(DbDiskExecutor.BULK_OFFSET)
         )).execute()
         print(result.to_json())
     except Exception as e:
@@ -139,7 +140,7 @@ if __name__ == "__main__":
            # ftps_pkcs_test()
            # db_disk_test()
            # db_request_test()
-             db_chunk_test()
+            db_chunk_test()
     except Exception as e:
         print(e)
 

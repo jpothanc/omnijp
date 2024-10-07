@@ -1,7 +1,5 @@
 import asyncio
 import concurrent.futures
-import logging
-import os
 import time
 from concurrent.futures import ThreadPoolExecutor
 
@@ -10,19 +8,12 @@ from src.common.helper import json_to_file
 from src.dbdisk.db_disk_factory import DbDiskFactory
 from src.dbdisk.db_disk_request import DbDiskRequest
 from src.dbdisk.db_disk_result import DbDiskResult, TableDumpResult
+from src.dbdisk.executors.db_disk_executor import DbDiskExecutor
 
 
-class DbDiskRequestExecutor:
+class DbDiskRequestExecutor(DbDiskExecutor):
     def __init__(self, db_disk_request: DbDiskRequest):
-        self.db_disk_request = db_disk_request
-        self.logger = logging.getLogger(__name__)
-        self.logger.addHandler(logging.NullHandler())
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
+        super().__init__(db_disk_request)
 
     def execute(self) -> DbDiskResult:
         """
@@ -124,7 +115,3 @@ class DbDiskRequestExecutor:
         elapsed_time = round((end_time - start_time) * 1000, 3)  # Round to 3 decimal places
         result = TableDumpResult(name=table, row_count=len(data), time_taken=str(elapsed_time) + " ms")
         return result
-
-    @property
-    def _thread_workers(self):
-        return min(5, os.cpu_count() + 4)

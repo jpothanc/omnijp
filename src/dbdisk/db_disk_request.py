@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from src.common.caches.disk_cache_type import DiskFileType
 from src.common.constants import DB_DISK_RESULT_FILE
 from src.common.database.db_type import DbType
+from src.dbdisk.dbdisk_executor_type import DbDiskExecutor
 
 MAX_ROWS = 1000000
 
@@ -23,7 +24,7 @@ class DbDiskRequest:
     table_list: list = None
     query = None
     output_file = None
-    bulk: bool = False
+    executor_type:DbDiskExecutor = DbDiskExecutor.DEFAULT
 
     @property
     def result_output_file(self):
