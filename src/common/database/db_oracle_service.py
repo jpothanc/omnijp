@@ -2,8 +2,8 @@ from src.common.database.db_service import DbService
 
 
 class DbOracleService(DbService):
-    def __init__(self, connection_string: str):
-        self.connection_string = connection_string
+    def __init__(self, connection_string):
+        super().__init__(connection_string)
 
     def connect(self):
         import cx_Oracle

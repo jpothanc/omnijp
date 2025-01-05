@@ -1,4 +1,8 @@
 # Changelog
+## [2.24.0] - 2025-01-05
+### Fixed
+-DbOracleService throws an exception logger is not defined. This is now fixed.
+
 ## [2.24.0] - 2024-10-06
 ### Added
 -Added support to dump bulk data from big tables
