@@ -1,5 +1,5 @@
 # Changelog
-## [2.24.0] - 2025-01-05
+## [2.25.0] - 2025-01-05
 ### Fixed
 -DbOracleService throws an exception logger is not defined. This is now fixed.
 
